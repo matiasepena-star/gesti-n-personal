@@ -686,6 +686,19 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
   }
 
   function monthTotals(key){
+  const [yy, mm] = key.split("-").map(Number);
+  const from = new Date(yy, mm-1, 1, 0,0,0,0);
+  const to = new Date(yy, mm, 0, 23,59,59,999);
+  let inn=0, out=0;
+  for(const mv of state.movements){
+    const t = new Date(mv.ts);
+    if(isNaN(t) || t<from || t>to) continue;
+    const amt = Number(mv.amount)||0;
+    if(mv.type==="in") inn += amt;
+    else if(mv.type==="out") out += amt;
+  }
+  return {inn,out,net:inn-out};
+}
     const [yy, mm] = key.split("-").map(Number);
     const from = new Date(yy, mm-1, 1, 0,0,0,0);
     const to = new Date(yy, mm, 0, 23,59,59,999);
