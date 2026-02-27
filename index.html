@@ -20,7 +20,9 @@
   --r2:22px;
   --press: translateY(1px) scale(.985);
 }
+
 *{box-sizing:border-box}
+
 html,body{
   height:100%;
   margin:0;
@@ -29,11 +31,23 @@ html,body{
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  overflow-x:hidden; /* scroll solo vertical */
+
+  /* ✅ scroll SOLO vertical */
+  overflow-x:hidden;
   overscroll-behavior: none;
 }
+
+body{
+  -webkit-tap-highlight-color: transparent;
+}
+
 a{color:inherit}
-.wrap{max-width:980px;margin:0 auto;padding:14px 12px 44px}
+.wrap{
+  max-width:980px;
+  margin:0 auto;
+  padding:14px 12px 44px;
+  overflow-x:hidden; /* ✅ */
+}
 
 /* Top */
 .top{
@@ -41,6 +55,7 @@ a{color:inherit}
   background:rgba(15,17,21,.94);
   border-bottom:1px solid var(--stroke);
   backdrop-filter: blur(10px);
+  overflow-x:hidden; /* ✅ */
 }
 .topInner{max-width:980px;margin:0 auto;padding:12px 12px}
 .row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
@@ -57,9 +72,12 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
   padding:9px 10px;border-radius:999px;
   border:1px solid var(--stroke);
   background:rgba(255,255,255,.04);
+  max-width:100%;
 }
 .pill b{font-size:12px}
-.pill span{font-size:12px;color:var(--muted)}
+.pill span{font-size:12px;color:var(--muted);white-space:nowrap}
+
+/* Tabs */
 .nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .tab{
   border:1px solid var(--stroke);
@@ -68,8 +86,9 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
   padding:10px 12px;border-radius:999px;
   cursor:pointer;
   font-weight:900;font-size:13px;
-  transition:.10s transform,.10s background,.10s border-color;
+  transition:.10s transform,.10s background,.10s border-color,.10s box-shadow;
   user-select:none;
+  -webkit-tap-highlight-color: transparent;
 }
 .tab:active{transform:var(--press)}
 .tab.active{
@@ -108,6 +127,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
   border:1px solid rgba(255,255,255,.08);
   background:rgba(0,0,0,.15);
   border-radius:16px;padding:12px;
+  min-width:0; /* ✅ */
 }
 .kpi .label{font-size:12px;color:var(--muted)}
 .kpi .value{font-size:22px;font-weight:950;margin-top:6px;letter-spacing:.2px}
@@ -123,9 +143,12 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
   padding:11px 12px;border-radius:14px;
   cursor:pointer;font-weight:950;font-size:13px;
   display:inline-flex;gap:8px;align-items:center;justify-content:center;
-  transition:.08s transform,.08s background,.08s border-color,.08s box-shadow;
+  transition:.08s transform,.08s background,.08s border-color,.08s box-shadow,.08s filter;
   user-select:none;
   box-shadow: 0 10px 22px rgba(0,0,0,.22);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  min-width:0; /* ✅ */
 }
 .btn:active{
   transform:var(--press);
@@ -135,23 +158,47 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
 .btn.good{background:rgba(68,208,123,.14);border-color:rgba(68,208,123,.35)}
 .btn.bad{background:rgba(255,91,107,.12);border-color:rgba(255,91,107,.35)}
 .btn.small{padding:8px 10px;border-radius:12px;font-size:12px}
-.btn.big{padding:14px 14px;border-radius:18px;font-size:14px;min-width:170px}
+.btn.big{padding:14px 14px;border-radius:18px;font-size:14px}
 .btn.ghost{background:transparent;box-shadow:none}
 
+/* ✅ Feedback universal (JS agrega .pressed) */
+.btn.pressed, .tab.pressed{
+  transform: var(--press);
+  filter: brightness(1.12);
+  box-shadow: 0 6px 14px rgba(0,0,0,.20);
+}
+
+/* ✅ Dashboard: dos botones SIEMPRE al lado */
+.quickBtns{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  width:100%;
+}
+.quickBtns .btn{width:100%}
+
 /* Fields */
+.field{min-width:0} /* ✅ */
 .field label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px}
+
+/* ✅ iOS no haga zoom al escribir */
 .input, select{
   width:100%;
+  max-width:100%;
+  min-width:0;
   padding:11px 12px;
   border-radius:14px;
   border:1px solid rgba(255,255,255,.12);
   background:rgba(0,0,0,.18);
   color:var(--text);
   outline:none;
-  font-size:14px;
+  font-size:16px; /* ✅ clave para que no “agrande” */
+  line-height:1.2;
 }
+
 .formGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media (max-width: 560px){.formGrid{grid-template-columns:1fr}}
+
 .hr{height:1px;background:rgba(255,255,255,.08);margin:12px 0}
 .muted{color:var(--muted)}
 .mono{font-variant-numeric: tabular-nums; font-feature-settings:"tnum" 1}
@@ -182,11 +229,12 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
   border-radius:16px;
   padding:12px;
   display:flex;gap:10px;align-items:flex-start;justify-content:space-between;
+  min-width:0; /* ✅ */
 }
 .listItem + .listItem{margin-top:10px}
 .tiny{font-size:11px;color:var(--muted)}
 
-/* Tabla de movimientos: permite horizontal SOLO acá */
+/* Tabla: horizontal SOLO acá */
 .tableWrap{
   overflow-x:auto;
   -webkit-overflow-scrolling: touch;
@@ -197,16 +245,18 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
 .table td{padding:10px 10px;font-size:13px;vertical-align:middle}
 .right{text-align:right}
 
-/* ===== HOJA FULLSCREEN (NO MODAL FLOTANTE) ===== */
+/* ===== HOJA FULLSCREEN (NO CORRE AL COSTADO) ===== */
 .modalWrap{
   position:fixed;inset:0;z-index:100;
   display:none;
   background:var(--bg);
+  overflow-x:hidden; /* ✅ */
 }
 .modal{
   width:100%;
   height:100%;
   overflow-y:auto;
+  overflow-x:hidden; /* ✅ */
   -webkit-overflow-scrolling: touch;
 }
 .modalTop{
@@ -218,7 +268,10 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
   display:flex;align-items:center;justify-content:space-between;gap:10px;
 }
 .modalTop h3{margin:0;font-size:14px}
-.modalBody{padding:14px 14px 90px}
+.modalBody{
+  padding:14px 14px 90px;
+  overflow-x:hidden; /* ✅ */
+}
 </style>
 </head>
 
@@ -257,11 +310,13 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
             <h2>Acceso rápido</h2>
             <p>Dos botones, bien arriba. Rápido y limpio.</p>
           </div>
-          <div class="btnRow">
+
+          <div class="quickBtns">
             <button class="btn big good" id="btnQuickIn">➕ Entrada</button>
             <button class="btn big bad" id="btnQuickOut">➖ Salida</button>
           </div>
         </div>
+
         <div class="cardBody">
           <div class="kpis">
             <div class="kpi">
@@ -453,6 +508,35 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
 (() => {
   const KEY = "gestion_personal_v3_sheet";
 
+  // ✅ Feedback REAL en TODOS los botones/tabs
+  function bindPressFeedback(){
+    const selector = ".btn, .tab, label.btn";
+    const add = (el)=> el.classList.add("pressed");
+    const rem = (el)=> el.classList.remove("pressed");
+
+    document.addEventListener("pointerdown", (e)=>{
+      const el = e.target.closest(selector);
+      if(!el) return;
+      add(el);
+    }, {passive:true});
+
+    document.addEventListener("pointerup", (e)=>{
+      const el = e.target.closest(selector);
+      if(!el) return;
+      setTimeout(()=>rem(el), 60);
+    }, {passive:true});
+
+    document.addEventListener("pointercancel", (e)=>{
+      const el = e.target.closest(selector);
+      if(!el) return;
+      rem(el);
+    }, {passive:true});
+
+    document.addEventListener("touchend", ()=>{
+      document.querySelectorAll(".pressed").forEach(rem);
+    }, {passive:true});
+  }
+
   // Helpers
   const $$ = sel => document.querySelector(sel);
   const $$$ = sel => Array.from(document.querySelectorAll(sel));
@@ -538,9 +622,9 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
       if(!Array.isArray(st.master.categories)) st.master.categories = [];
       if(!Array.isArray(st.master.payMethods)) st.master.payMethods = defaultState().master.payMethods;
 
-      // asegurar tarjeta fija
       const hasCard = st.master.payMethods.some(m => m && String(m.name).toLowerCase()==="tarjeta");
       if(!hasCard) st.master.payMethods.push({ name:"Tarjeta", opening:0, isCard:true });
+
       st.master.payMethods = st.master.payMethods.map(m=>{
         if(!m || !m.name) return null;
         const name = String(m.name);
@@ -559,14 +643,13 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
   }
   let state = load();
   function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
-
-  // Business logic
+    // Business logic
   function isCardMethod(methodName){ return String(methodName||"").toLowerCase()==="tarjeta"; }
 
   function methodBalance(methodName){
     const m = state.master.payMethods.find(x=>x.name===methodName);
     const opening = m ? Number(m.opening)||0 : 0;
-    if(isCardMethod(methodName)) return opening; // tarjeta no es disponible
+    if(isCardMethod(methodName)) return opening;
     let bal = opening;
     for(const mv of state.movements){
       if(mv.method !== methodName) continue;
@@ -630,7 +713,6 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
       .slice(0,n);
   }
 
-  // Cuotas
   function installmentsForDebt(debt){
     const cuotas = Math.max(1, Number(debt.cuotas)||1);
     const total = Number(debt.total)||0;
@@ -671,7 +753,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
     return items;
   }
 
-  // ===== UI refs
+  // UI refs
   const disponibleTop = $$("#disponibleTop");
   const kpiInMes = $$("#kpiInMes");
   const kpiOutMes = $$("#kpiOutMes");
@@ -695,7 +777,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
   const newPay = $$("#newPay");
   const payList = $$("#payList");
 
-  // ===== Hoja fullscreen
+  // Hoja fullscreen
   const modalWrap = $$("#modalWrap");
   const modalTitle = $$("#modalTitle");
   const modalBody = $$("#modalBody");
@@ -705,20 +787,20 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
     modalTitle.textContent = title;
     modalBody.innerHTML = html;
     modalWrap.style.display = "block";
-    document.body.style.overflow = "hidden"; // bloquea fondo
-    window.scrollTo({top:0, behavior:"instant" in window ? "instant":"auto"});
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflowX = "hidden";
   }
   function closeSheet(){
     modalWrap.style.display = "none";
     modalBody.innerHTML = "";
     document.body.style.overflow = "auto";
+    document.documentElement.style.overflowX = "hidden";
   }
-  // cierre con ESC
   document.addEventListener("keydown", (e)=>{
     if(e.key === "Escape" && modalWrap.style.display==="block") closeSheet();
   });
 
-  // ===== Views
+  // Views
   function setView(name){
     $$$(".tab").forEach(t => t.classList.toggle("active", t.dataset.view===name));
     $$$(".view").forEach(v => v.style.display = "none");
@@ -729,7 +811,6 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
   }
   $$$(".tab").forEach(t => t.addEventListener("click", ()=>setView(t.dataset.view)));
 
-  // ===== Render
   function populateMonthFilter(){
     const current = monthKey(new Date());
     const months = new Set([current]);
@@ -1044,13 +1125,11 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
       });
     });
   }
-
-  function renderAll(){
+    function renderAll(){
     save();
 
     disponibleTop.textContent = money(totalDisponible());
 
-    // KPI del mes actual (dashboard)
     const mt = monthTotals(monthKey(new Date()));
     kpiInMes.textContent = money(mt.inn);
     kpiOutMes.textContent = money(mt.out);
@@ -1073,7 +1152,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
     renderMasterPays();
   }
 
-  // ===== Actions Maestro
+  // Maestro actions
   $$("#btnAddCat").addEventListener("click", ()=>{
     const name = (newCat.value||"").trim();
     if(!name) return alert("Poné un nombre de categoría.");
@@ -1113,7 +1192,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
     renderAll();
   });
 
-  // ===== Backup
+  // Backup
   $$("#btnExport").addEventListener("click", ()=>{
     const blob = new Blob([JSON.stringify(state, null, 2)], {type:"application/json"});
     const url = URL.createObjectURL(blob);
@@ -1151,20 +1230,22 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
     renderAll();
   });
 
-  // ===== Filters
+  // Filters
   filterMonth.addEventListener("change", renderAll);
   filterType.addEventListener("change", renderAll);
 
-  // ===== Dashboard buttons => abrir hoja
+  // Dashboard buttons => abrir hoja
   $$("#btnQuickIn").addEventListener("click", ()=>openMovementSheet("in"));
   $$("#btnQuickOut").addEventListener("click", ()=>openMovementSheet("out"));
 
+  // === HOJAS (fullscreen fijo) ===
   function openMovementSheet(type){
     const isIn = type==="in";
     const today = toDateInputValue(new Date());
     const cats = getCategories();
     const hasCats = cats.length>0;
 
+    // Entrada: solo métodos reales. Salida: incluye Tarjeta
     const methods = isIn ? getRealMethods() : getAllMethods();
 
     openSheet(isIn ? "Nueva entrada" : "Nueva salida", `
@@ -1183,14 +1264,19 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
           <select id="m_method">
             ${methods.map(m=>`<option value="${escapeAttr(m.name)}">${escapeHtml(m.name)}</option>`).join("")}
           </select>
-          ${isIn ? `<div class="tiny muted">Entrada no usa Tarjeta.</div>` : `<div class="tiny muted">Si elegís Tarjeta: crea deuda + cuotas.</div>`}
+          ${isIn
+            ? `<div class="tiny muted">Entrada no usa Tarjeta.</div>`
+            : `<div class="tiny muted">Si elegís <b>Tarjeta</b>: se crea deuda + cuotas.</div>`
+          }
         </div>
 
         <div class="field">
           <label>Categoría</label>
           <select id="m_cat">
-            ${hasCats ? `<option value="">— Elegí —</option>` + cats.map(c=>`<option value="${escapeAttr(c.name)}">${escapeHtml(c.name)}</option>`).join("")
-                     : `<option value="">(sin categorías)</option>`}
+            ${hasCats
+              ? `<option value="">— Elegí —</option>` + cats.map(c=>`<option value="${escapeAttr(c.name)}">${escapeHtml(c.name)}</option>`).join("")
+              : `<option value="">(sin categorías)</option>`
+            }
           </select>
           ${hasCats ? `` : `<div class="tiny muted">Creá categorías en Hoja Maestro.</div>`}
         </div>
@@ -1210,217 +1296,181 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
         <div class="hr"></div>
         <div class="formGrid">
           <div class="field">
-            <label>Descripción de la compra</label>
-            <input class="input" id="c_desc" placeholder="Ej: Zapatillas / Electro / etc."/>
+            <label>Descripción (tarjeta)</label>
+            <input class="input" id="c_desc" placeholder="Ej: Zapatillas / Tele / etc."/>
           </div>
           <div class="field">
             <label>Cuotas</label>
-            <select id="c_cuotas">
-              ${[1,2,3,4,5,6,9,12,18].map(n=>`<option value="${n}">${n}</option>`).join("")}
-            </select>
+            <input class="input mono" id="c_cuotas" type="tel" inputmode="numeric" placeholder="Ej: 3"/>
           </div>
           <div class="field">
-            <label>Vence 1° cuota</label>
-            <input class="input" id="c_first" type="date" value="${today}"/>
+            <label>Primer vencimiento</label>
+            <input class="input" id="c_firstDue" type="date" value="${today}"/>
           </div>
           <div class="field">
-            <label>Cuota estimada</label>
-            <input class="input mono" id="c_each" type="text" disabled value="$ 0"/>
+            <label>Banco / tarjeta (opcional)</label>
+            <input class="input" id="c_bank" placeholder="Ej: Visa / Master / etc."/>
           </div>
         </div>
+        <div class="tiny muted">Se crea una deuda por el total. Después la pagás por cuota desde el Dashboard.</div>
       </div>
 
       <div class="hr"></div>
       <div class="btnRow">
-        <button class="btn ${isIn ? "good" : "bad"}" id="m_save">Guardar</button>
-        <button class="btn ghost" id="m_cancel">Cancelar</button>
+        <button class="btn ${isIn ? "good" : "bad"}" id="btnSaveMov">Guardar</button>
+        <button class="btn ghost" id="btnCancelMov">Cancelar</button>
       </div>
     `);
 
-    const m_amount = $$("#m_amount");
-    const m_method = $$("#m_method");
-    const m_cat = $$("#m_cat");
-    const m_sub = $$("#m_sub");
+    // Behaviors
+    const amount = $$("#m_amount");
+    amount.addEventListener("input", ()=>fmtMoneyLive(amount));
+
+    const catSel = $$("#m_cat");
+    const subSel = $$("#m_sub");
+    function fillSubs(){
+      const catName = catSel.value;
+      const subs = catName ? getSubcats(catName) : [];
+      subSel.innerHTML = `<option value="">—</option>` + subs.map(s=>`<option value="${escapeAttr(s)}">${escapeHtml(s)}</option>`).join("");
+    }
+    catSel.addEventListener("change", fillSubs);
+    fillSubs();
+
+    const methodSel = $$("#m_method");
     const cardExtras = $$("#cardExtras");
-
-    const c_desc = () => $$("#c_desc");
-    const c_cuotas = () => $$("#c_cuotas");
-    const c_first = () => $$("#c_first");
-    const c_each = () => $$("#c_each");
-
-    m_amount.addEventListener("input", ()=>fmtMoneyLive(m_amount));
-
-    function refreshSubs(){
-      const cat = m_cat.value;
-      const subs = cat ? getSubcats(cat) : [];
-      m_sub.innerHTML = `<option value="">—</option>` + subs.map(s=>`<option value="${escapeAttr(s)}">${escapeHtml(s)}</option>`).join("");
+    function toggleCard(){
+      const isCard = isCardMethod(methodSel.value);
+      cardExtras.style.display = (!isIn && isCard) ? "block" : "none";
     }
-    m_cat.addEventListener("change", refreshSubs);
-    refreshSubs();
+    methodSel.addEventListener("change", toggleCard);
+    toggleCard();
 
-    function refreshCardUI(){
-      const isCard = isCardMethod(m_method.value);
-      cardExtras.style.display = (!isIn && isCard) ? "" : "none";
-      if(!isIn && isCard){
-        const amt = parseMoney(m_amount.value);
-        const cuotas = Number(c_cuotas().value||1);
-        const each = cuotas>0 ? Math.round(amt / cuotas) : 0;
-        c_each().value = amt ? money(each) : "$ 0";
-      }
-    }
-    m_method.addEventListener("change", refreshCardUI);
+    $$("#btnCancelMov").addEventListener("click", closeSheet);
 
-    modalBody.addEventListener("input", (e)=>{
-      if(e.target && (e.target.id==="m_amount" || e.target.id==="c_cuotas")){
-        refreshCardUI();
-      }
-    });
+    $$("#btnSaveMov").addEventListener("click", ()=>{
+      const amt = parseMoney(amount.value);
+      if(!amt) return alert("Poné un monto.");
+      const dateV = $$("#m_date").value;
+      if(!dateV) return alert("Poné la fecha.");
+      const when = parseDateInput(dateV);
+      const method = methodSel.value;
 
-    $$("#m_cancel").addEventListener("click", closeSheet);
+      if(isIn && isCardMethod(method)) return alert("Entrada no puede ser con Tarjeta.");
 
-    $$("#m_save").addEventListener("click", ()=>{
-      const amt = parseMoney(m_amount.value);
-      const date = $$("#m_date").value;
-      const method = m_method.value;
-      const cat = m_cat.value;
-      const sub = m_sub.value || "";
-      const note = ($$("#m_note").value || "").trim();
+      const mv = {
+        id: uid(),
+        type,
+        amount: amt,
+        ts: when.toISOString(),
+        method,
+        category: catSel.value || "",
+        subcategory: subSel.value || "",
+        note: ($$("#m_note").value||"").trim(),
+        meta: {}
+      };
 
-      if(!amt || amt<=0) return alert("Poné un monto válido.");
-      if(!date) return alert("Elegí una fecha.");
-      if(!method) return alert("Elegí un método.");
-      if(getCategories().length>0 && !cat) return alert("Elegí una categoría.");
-
-      const ts = parseDateInput(date).toISOString();
-
+      // Si es salida con tarjeta => crear deuda + cuotas
       if(!isIn && isCardMethod(method)){
-        const desc = (c_desc().value||"").trim() || "Compra tarjeta";
-        const cuotas = Math.max(1, Number(c_cuotas().value||1));
-        const first = parseDateInput(c_first().value || date).toISOString();
+        const desc = ($$("#c_desc").value||"").trim() || "Compra tarjeta";
+        const cuotas = Math.max(1, Number(parseMoney($$("#c_cuotas").value) || $$("#c_cuotas").value) || 1);
+        const firstDue = $$("#c_firstDue").value ? parseDateInput($$("#c_firstDue").value) : when;
+        const bank = ($$("#c_bank").value||"").trim();
 
-        const debtId = uid();
-        state.cardDebts.push({
-          id: debtId,
+        const debt = {
+          id: uid(),
           desc,
           total: amt,
           cuotas,
-          firstDueISO: first,
-          paidCount: 0,
-          createdISO: new Date().toISOString()
-        });
-
-        state.movements.push({
-          id: uid(),
-          ts,
-          type: "out",
-          amount: amt,
-          method: "Tarjeta",
-          category: cat || "",
-          subcategory: sub,
-          note: note ? note : `En ${cuotas} cuota(s) · ${desc}`,
-          meta:{kind:"card_purchase", debtId}
-        });
-
-        closeSheet();
-        renderAll();
-        return;
+          firstDueISO: firstDue.toISOString(),
+          bank,
+          createdAtISO: new Date().toISOString(),
+          paidCount: 0
+        };
+        state.cardDebts.push(debt);
+        mv.meta.kind = "card_purchase";
+        mv.meta.debtId = debt.id;
       }
 
-      state.movements.push({
-        id: uid(),
-        ts,
-        type: isIn ? "in" : "out",
-        amount: amt,
-        method,
-        category: cat || "",
-        subcategory: sub,
-        note
-      });
-
+      state.movements.push(mv);
       closeSheet();
       renderAll();
     });
-
-    refreshCardUI();
-    setTimeout(()=>m_amount.focus(), 60);
   }
 
+  // Pagar una cuota: impacta en "Disponible" (sale de método real) y baja deuda
   function openPayInstallmentSheet(debtId, idx){
     const debt = state.cardDebts.find(d=>d.id===debtId);
-    if(!debt) return alert("No encontré esa deuda.");
-
-    const cuotas = Math.max(1, Number(debt.cuotas)||1);
-    const total = Number(debt.total)||0;
-    const per = Math.round(total / cuotas);
-    const amount = (idx===cuotas) ? Math.max(0, total - per*(cuotas-1)) : per;
+    if(!debt) return alert("No se encontró esa deuda.");
 
     const inst = installmentsForDebt(debt).find(x=>x.idx===idx);
-    const due = inst ? new Date(inst.dueISO) : new Date();
+    if(!inst) return alert("No se encontró esa cuota.");
 
-    const payMethods = getRealMethods();
+    const methods = getRealMethods();
+    if(methods.length===0) return alert("Agregá un método real (Efectivo/MP/Banco) en Hoja Maestro.");
 
-    openSheet("Marcar cuota como pagada", `
+    openSheet("Pagar cuota", `
       <div class="kpi">
         <div class="label">Deuda</div>
-        <div style="font-weight:950;margin-top:6px">${escapeHtml(debt.desc)}</div>
-        <div class="tiny">Cuota ${idx}/${cuotas} · Vence: <span class="mono">${humanDate(due)}</span></div>
-        <div class="value mono bad" style="font-size:18px;margin-top:10px">${money(amount)}</div>
+        <div class="value mono">${escapeHtml(debt.desc)}</div>
+        <div class="tiny">Cuota ${inst.idx}/${inst.cuotas} · Vence: <span class="mono">${humanDate(new Date(inst.dueISO))}</span></div>
       </div>
 
       <div class="hr"></div>
 
       <div class="formGrid">
         <div class="field">
-          <label>Pagado desde</label>
-          <select id="p_method">
-            ${payMethods.map(m=>`<option value="${escapeAttr(m.name)}">${escapeHtml(m.name)}</option>`).join("")}
-          </select>
+          <label>Monto cuota</label>
+          <input class="input mono" id="p_amt" type="tel" inputmode="numeric" value="${money(inst.amount)}"/>
         </div>
         <div class="field">
           <label>Fecha de pago</label>
           <input class="input" id="p_date" type="date" value="${toDateInputValue(new Date())}"/>
         </div>
-
         <div class="field" style="grid-column:1/-1">
-          <label>Nota (opcional)</label>
-          <input class="input" id="p_note" placeholder="Ej: pago resumen / pago cuota tarjeta"/>
+          <label>Pagás con</label>
+          <select id="p_method">
+            ${methods.map(m=>`<option value="${escapeAttr(m.name)}">${escapeHtml(m.name)}</option>`).join("")}
+          </select>
+          <div class="tiny muted">Esto baja tu disponible y marca la cuota como pagada.</div>
         </div>
       </div>
 
       <div class="hr"></div>
       <div class="btnRow">
-        <button class="btn good" id="p_ok">Marcar pagado</button>
-        <button class="btn ghost" id="p_cancel">Cancelar</button>
+        <button class="btn good" id="btnPayOk">Confirmar pago</button>
+        <button class="btn ghost" id="btnPayCancel">Cancelar</button>
       </div>
     `);
 
-    $$("#p_cancel").addEventListener("click", closeSheet);
-    $$("#p_ok").addEventListener("click", ()=>{
+    const pAmt = $$("#p_amt");
+    pAmt.addEventListener("input", ()=>fmtMoneyLive(pAmt));
+
+    $$("#btnPayCancel").addEventListener("click", closeSheet);
+
+    $$("#btnPayOk").addEventListener("click", ()=>{
+      const amt = parseMoney(pAmt.value);
+      if(!amt) return alert("Monto inválido.");
+      const dateV = $$("#p_date").value;
+      if(!dateV) return alert("Poné la fecha.");
+      const when = parseDateInput(dateV);
       const method = $$("#p_method").value;
-      const date = $$("#p_date").value;
-      const note = ($$("#p_note").value||"").trim();
 
-      if(!method) return alert("Elegí desde qué método pagaste.");
-      if(!date) return alert("Elegí fecha de pago.");
-
-      if(Number(debt.paidCount||0) >= idx){
-        closeSheet();
-        renderAll();
-        return;
-      }
-      debt.paidCount = Math.max(Number(debt.paidCount||0), idx);
-
+      // Registrar salida real (pago) y bajar deuda
       state.movements.push({
         id: uid(),
-        ts: parseDateInput(date).toISOString(),
         type: "out",
-        amount,
+        amount: amt,
+        ts: when.toISOString(),
         method,
         category: "Tarjeta",
         subcategory: "Pago cuota",
-        note: note || `${debt.desc} · Cuota ${idx}/${cuotas}`,
-        meta:{kind:"card_payment", debtId}
+        note: debt.desc,
+        meta: { kind: "card_payment", debtId: debt.id, cuota: idx }
       });
+
+      // marcar cuota como pagada (avanza contador)
+      const paid = Math.max(0, Number(debt.paidCount)||0);
+      debt.paidCount = Math.max(paid, idx);
 
       closeSheet();
       renderAll();
@@ -1428,7 +1478,9 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
   }
 
   // Init
+  bindPressFeedback();
   renderAll();
+
 })();
 </script>
 </body>
