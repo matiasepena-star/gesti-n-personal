@@ -10,13 +10,14 @@
 :root{
   --bg:#0f1115;
   --card:#141a24;
+  --card2:#101724;
   --stroke:rgba(255,255,255,.10);
   --text:#e8ecf6;
   --muted:rgba(232,236,246,.62);
   --brand:#7aa2ff;
   --good:#44d07b;
   --bad:#ff5b6b;
-  --shadow:0 18px 50px rgba(0,0,0,.55);
+  --shadow:0 18px 55px rgba(0,0,0,.55);
   --r:18px;
   --r2:22px;
   --press: translateY(1px) scale(.99);
@@ -26,18 +27,17 @@ html,body{height:100%}
 body{
   margin:0;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-  background:
-    radial-gradient(900px 540px at 20% -10%, rgba(122,162,255,.20), transparent 60%),
-    radial-gradient(700px 520px at 90% 10%, rgba(68,208,123,.12), transparent 55%),
-    var(--bg);
+  background: var(--bg);
   color:var(--text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
-.wrap{max-width:980px;margin:0 auto;padding:14px 12px 88px}
+.wrap{max-width:980px;margin:0 auto;padding:14px 12px 44px}
 .top{
   position:sticky;top:0;z-index:20;
-  backdrop-filter: blur(10px);
-  background: linear-gradient(to bottom, rgba(15,17,21,.90), rgba(15,17,21,.55));
+  background:rgba(15,17,21,.92);
   border-bottom:1px solid var(--stroke);
+  backdrop-filter: blur(10px);
 }
 .topInner{max-width:980px;margin:0 auto;padding:12px 12px}
 .row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
@@ -66,7 +66,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
   color:var(--text);
   padding:10px 12px;border-radius:999px;
   cursor:pointer;
-  font-weight:750;font-size:13px;
+  font-weight:800;font-size:13px;
   transition:.12s transform,.12s background,.12s border-color;
   user-select:none;
 }
@@ -75,6 +75,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
   background:rgba(122,162,255,.16);
   border-color:rgba(122,162,255,.35);
 }
+
 .grid{
   display:grid;
   grid-template-columns: 1.25fr .95fr;
@@ -93,7 +94,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
 .cardHeader{
   padding:14px 14px 10px;
   border-bottom:1px solid rgba(255,255,255,.06);
-  display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;
 }
 .cardHeader h2{margin:0;font-size:14px;letter-spacing:.2px}
 .cardHeader p{margin:6px 0 0;font-size:12px;color:var(--muted)}
@@ -107,7 +108,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
   border-radius:16px;padding:12px;
 }
 .kpi .label{font-size:12px;color:var(--muted)}
-.kpi .value{font-size:20px;font-weight:900;margin-top:6px;letter-spacing:.2px}
+.kpi .value{font-size:22px;font-weight:950;margin-top:6px;letter-spacing:.2px}
 .value.good{color:var(--good)}
 .value.bad{color:var(--bad)}
 
@@ -117,8 +118,8 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
   background:rgba(255,255,255,.04);
   color:var(--text);
   padding:11px 12px;border-radius:14px;
-  cursor:pointer;font-weight:800;font-size:13px;
-  display:inline-flex;gap:8px;align-items:center;
+  cursor:pointer;font-weight:900;font-size:13px;
+  display:inline-flex;gap:8px;align-items:center;justify-content:center;
   transition:.12s transform,.12s background,.12s border-color;
   user-select:none;
 }
@@ -128,6 +129,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
 .btn.bad{background:rgba(255,91,107,.12);border-color:rgba(255,91,107,.35)}
 .btn.small{padding:8px 10px;border-radius:12px;font-size:12px}
 .btn.ghost{background:transparent}
+.btn.big{padding:14px 14px;border-radius:18px;font-size:14px;min-width:160px}
 
 .field label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px}
 .input, select{
@@ -152,7 +154,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
 .right{text-align:right}
 .badge{
   display:inline-flex;align-items:center;gap:6px;
-  font-size:12px;font-weight:850;
+  font-size:12px;font-weight:900;
   padding:6px 10px;border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(255,255,255,.04);
@@ -160,6 +162,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
 }
 .badge.in{border-color:rgba(68,208,123,.35);background:rgba(68,208,123,.10)}
 .badge.out{border-color:rgba(255,91,107,.35);background:rgba(255,91,107,.10)}
+.badge.card{border-color:rgba(122,162,255,.35);background:rgba(122,162,255,.10)}
 .empty{
   padding:14px;border-radius:16px;
   border:1px dashed rgba(255,255,255,.18);
@@ -167,6 +170,17 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
   background:rgba(0,0,0,.10);
   font-size:13px;
 }
+
+.listItem{
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(0,0,0,.14);
+  border-radius:16px;
+  padding:12px;
+  display:flex;gap:10px;align-items:flex-start;justify-content:space-between;
+}
+.listItem + .listItem{margin-top:10px}
+.small{font-size:12px}
+.tiny{font-size:11px;color:var(--muted)}
 
 /* Modal */
 .modalWrap{
@@ -189,15 +203,6 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
 }
 .modalTop h3{margin:0;font-size:14px}
 .modalBody{padding:14px}
-
-.foot{
-  position:fixed;left:0;right:0;bottom:0;z-index:25;
-  background:linear-gradient(to top, rgba(15,17,21,.92), rgba(15,17,21,.25));
-  border-top:1px solid rgba(255,255,255,.10);
-  backdrop-filter: blur(10px);
-}
-.footInner{max-width:980px;margin:0 auto;padding:10px 12px}
-.tiny{font-size:11px;color:var(--muted)}
 </style>
 </head>
 
@@ -209,12 +214,12 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
           <div class="logo" aria-hidden="true"></div>
           <div>
             <h1>💰 Gestión Personal</h1>
-            <div class="sub">Entrada / Salida · Categorías · Método de pago · Maestro</div>
+            <div class="sub">Tarjeta a pagar + vencimientos · Disponible por método</div>
           </div>
         </div>
-        <div class="pill" title="Saldo calculado automáticamente">
-          <b>Saldo</b>
-          <span class="mono" id="saldoTop">$ 0</span>
+        <div class="pill" title="Disponible total (métodos reales, sin Tarjeta)">
+          <b>Disponible</b>
+          <span class="mono" id="disponibleTop">$ 0</span>
         </div>
       </div>
 
@@ -231,49 +236,69 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
 
     <!-- DASHBOARD -->
     <section class="view" id="view-dashboard">
+      <div class="card">
+        <div class="cardHeader">
+          <div>
+            <h2>Acceso rápido</h2>
+            <p>Dos botones. Como debe ser.</p>
+          </div>
+          <div class="btnRow">
+            <button class="btn big good" id="btnQuickIn">➕ Entrada</button>
+            <button class="btn big bad" id="btnQuickOut">➖ Salida</button>
+          </div>
+        </div>
+        <div class="cardBody">
+          <div class="kpis">
+            <div class="kpi">
+              <div class="label">Entradas del mes</div>
+              <div class="value mono good" id="kpiInMes">$ 0</div>
+            </div>
+            <div class="kpi">
+              <div class="label">Salidas del mes</div>
+              <div class="value mono bad" id="kpiOutMes">$ 0</div>
+            </div>
+            <div class="kpi">
+              <div class="label">Neto del mes</div>
+              <div class="value mono" id="kpiNetoMes">$ 0</div>
+            </div>
+            <div class="kpi">
+              <div class="label">Tarjeta a pagar</div>
+              <div class="value mono" id="kpiCardDebt">$ 0</div>
+              <div class="tiny">Compras con tarjeta → deuda. Pagos → bajan la deuda.</div>
+            </div>
+          </div>
+
+          <div class="hr"></div>
+
+          <h2 style="margin:0 0 10px;font-size:14px">Disponible por método</h2>
+          <div id="byMethod"></div>
+
+          <div class="hr"></div>
+
+          <h2 style="margin:0 0 10px;font-size:14px">Próximos vencimientos (cuotas)</h2>
+          <div id="upcoming"></div>
+        </div>
+      </div>
+
       <div class="grid">
         <div class="card">
           <div class="cardHeader">
             <div>
-              <h2>Resumen</h2>
-              <p>Saldo + totales del mes. Sin chamuyo.</p>
-            </div>
-            <div class="btnRow">
-              <button class="btn good" id="btnAddIn">+ Entrada</button>
-              <button class="btn bad" id="btnAddOut">+ Salida</button>
+              <h2>Últimos movimientos</h2>
+              <p>Para chequear rápido qué cargaste.</p>
             </div>
           </div>
-          <div class="cardBody">
-            <div class="kpis">
-              <div class="kpi">
-                <div class="label">Saldo actual</div>
-                <div class="value mono" id="kpiSaldo">$ 0</div>
-                <div class="tiny">Incluye saldo inicial (si lo usás).</div>
-              </div>
-              <div class="kpi">
-                <div class="label">Mes actual · Neto</div>
-                <div class="value mono" id="kpiNetoMes">$ 0</div>
-                <div class="tiny"><span class="mono" id="kpiInMes">$ 0</span> entra · <span class="mono" id="kpiOutMes">$ 0</span> sale</div>
-              </div>
-            </div>
-
-            <div class="hr"></div>
-
-            <h3 style="margin:0 0 10px;font-size:13px;letter-spacing:.2px">Últimos movimientos</h3>
-            <div id="lastMovs"></div>
-          </div>
+          <div class="cardBody" id="lastMovs"></div>
         </div>
 
         <div class="card">
           <div class="cardHeader">
             <div>
-              <h2>Totales por categoría (mes)</h2>
-              <p>Para ver en qué se va la guita.</p>
+              <h2>Gastos sugeridos a pagar</h2>
+              <p>Lista simple para que no se te escape nada.</p>
             </div>
           </div>
-          <div class="cardBody">
-            <div id="byCat"></div>
-          </div>
+          <div class="cardBody" id="suggested"></div>
         </div>
       </div>
     </section>
@@ -284,11 +309,10 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
         <div class="cardHeader">
           <div>
             <h2>Movimientos</h2>
-            <p>Entrada/Salida con categoría, subcategoría y método.</p>
+            <p>Filtrá y revisá. Los botones de carga están en Dashboard.</p>
           </div>
           <div class="btnRow">
-            <button class="btn good" id="btnAddIn2">+ Entrada</button>
-            <button class="btn bad" id="btnAddOut2">+ Salida</button>
+            <div class="pill"><b>Mes</b> <span class="mono" id="pillMes"></span></div>
           </div>
         </div>
         <div class="cardBody">
@@ -318,7 +342,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
           <div class="cardHeader">
             <div>
               <h2>Categorías y subcategorías</h2>
-              <p>Primero definís la “lista”, después cargás fácil.</p>
+              <p>Sin ejemplos. Las armás vos.</p>
             </div>
           </div>
           <div class="cardBody">
@@ -328,7 +352,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
                 <input class="input" id="newCat" placeholder="Ej: Hogar"/>
               </div>
               <div class="field" style="display:flex;align-items:end">
-                <button class="btn primary" id="btnAddCat" style="width:100%">Agregar categoría</button>
+                <button class="btn primary" id="btnAddCat" style="width:100%">Agregar</button>
               </div>
 
               <div class="field">
@@ -337,7 +361,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
               </div>
               <div class="field">
                 <label>Nueva subcategoría</label>
-                <input class="input" id="newSub" placeholder="Ej: Super / Alquiler / Luz"/>
+                <input class="input" id="newSub" placeholder="Ej: Super"/>
               </div>
               <div class="field" style="grid-column:1/-1">
                 <button class="btn primary" id="btnAddSub" style="width:100%">Agregar subcategoría</button>
@@ -352,32 +376,27 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
         <div class="card">
           <div class="cardHeader">
             <div>
-              <h2>Métodos de pago + Saldo inicial</h2>
-              <p>Para que el movimiento quede completo.</p>
+              <h2>Métodos de pago + saldos iniciales</h2>
+              <p>Acá definís de dónde sale/entra la plata. “Tarjeta” es deuda.</p>
             </div>
           </div>
           <div class="cardBody">
             <div class="formGrid">
               <div class="field">
-                <label>Nuevo método de pago</label>
-                <input class="input" id="newPay" placeholder="Ej: Efectivo / Mercado Pago / Banco"/>
+                <label>Nuevo método (real)</label>
+                <input class="input" id="newPay" placeholder="Ej: Brubank / Provincia / etc."/>
+                <div class="tiny">No agregues “Tarjeta” acá: ya está fija.</div>
               </div>
               <div class="field" style="display:flex;align-items:end">
-                <button class="btn primary" id="btnAddPay" style="width:100%">Agregar método</button>
-              </div>
-
-              <div class="field" style="grid-column:1/-1">
-                <label>Saldo inicial (opcional)</label>
-                <input class="input" id="openingBalance" inputmode="numeric" type="tel" placeholder="$ 20.000"/>
-                <div class="tiny">Tip: tocá el campo y te sale el teclado numérico.</div>
-              </div>
-              <div class="field" style="grid-column:1/-1">
-                <button class="btn primary" id="btnSaveOpening" style="width:100%">Guardar saldo inicial</button>
+                <button class="btn primary" id="btnAddPay" style="width:100%">Agregar</button>
               </div>
             </div>
 
             <div class="hr"></div>
             <div id="payList"></div>
+
+            <div class="hr"></div>
+            <div class="tiny">Tip: los “disponibles por método” se calculan con saldo inicial + entradas/salidas del método.</div>
           </div>
         </div>
       </div>
@@ -389,7 +408,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
         <div class="cardHeader">
           <div>
             <h2>Backup</h2>
-            <p>Exportá/importá todo. Por si Safari se pone creativo.</p>
+            <p>Exportar / importar. Por si el navegador se hace el artista.</p>
           </div>
         </div>
         <div class="cardBody">
@@ -400,25 +419,11 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
             <button class="btn bad" id="btnWipe">Borrar todo</button>
           </div>
           <div class="hr"></div>
-          <div class="tiny">
-            Esto guarda en el navegador (local). Para usar en otro dispositivo: exportás e importás.
-          </div>
+          <div class="tiny">Guardado local. Para pasar a otro dispositivo: exportás e importás.</div>
         </div>
       </div>
     </section>
 
-  </div>
-
-  <div class="foot">
-    <div class="footInner">
-      <div class="row">
-        <div class="tiny">Guardado local · Rápido · Sin vueltas</div>
-        <div class="btnRow">
-          <button class="btn small good" id="quickIn">+ Entrada</button>
-          <button class="btn small bad" id="quickOut">+ Salida</button>
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- MODAL -->
@@ -434,35 +439,91 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
 
 <script>
 (() => {
-  const KEY = "gestion_personal_v2";
-  const nowISO = () => new Date().toISOString();
+  const KEY = "gestion_personal_v3";
+
+  // ===== Helpers
+  const $$ = sel => document.querySelector(sel);
+  const $$$ = sel => Array.from(document.querySelectorAll(sel));
   const uid = () => Math.random().toString(36).slice(2, 9) + "-" + Math.random().toString(36).slice(2, 7);
 
-  // --- Money formatting: "$ 20.000"
   const nf0 = new Intl.NumberFormat("es-AR", { maximumFractionDigits: 0 });
   const money = (n) => "$ " + nf0.format(Math.round(Number(n)||0));
 
   function parseMoney(str){
-    // acepta: "20000", "20.000", "$ 20.000"
     const s = String(str || "").replace(/[^\d]/g, "");
     return s ? Number(s) : 0;
   }
+  function fmtMoneyLive(input){
+    const raw = parseMoney(input.value);
+    input.value = raw ? money(raw) : "";
+  }
 
+  function escapeHtml(s){
+    return String(s)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+  function escapeAttr(s){ return escapeHtml(s).replaceAll("\n"," "); }
+
+  function monthKey(d){
+    const y=d.getFullYear();
+    const m=String(d.getMonth()+1).padStart(2,"0");
+    return `${y}-${m}`;
+  }
+  function humanMonth(key){
+    const [y, mm] = key.split("-").map(Number);
+    const name = new Date(y, mm-1, 1).toLocaleDateString("es-AR", {month:"long", year:"numeric"});
+    return name[0].toUpperCase()+name.slice(1);
+  }
+  function humanDate(d){
+    const dd=String(d.getDate()).padStart(2,"0");
+    const mm=String(d.getMonth()+1).padStart(2,"0");
+    const yy=d.getFullYear();
+    return `${dd}/${mm}/${yy}`;
+  }
+  function toDateInputValue(d){
+    const pad=n=>String(n).padStart(2,"0");
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  }
+  function parseDateInput(v){
+    const [y,m,dd]=v.split("-").map(Number);
+    return new Date(y, m-1, dd, 12,0,0,0);
+  }
+  function addMonths(d, n){
+    const dt = new Date(d);
+    const day = dt.getDate();
+    dt.setMonth(dt.getMonth()+n);
+    // ajuste si cae en fin de mes raro
+    if(dt.getDate() < day) dt.setDate(0);
+    return dt;
+  }
+
+  // ===== State
   function defaultState(){
     return {
-      meta:{ createdAt: nowISO(), version: 2 },
-      openingBalance: 0,
+      meta:{version:3, createdAt: new Date().toISOString()},
       master:{
-        categories: [
-          { name:"Hogar", subs:["Alquiler","Luz","Gas","Internet","Super"] },
-          { name:"Transporte", subs:["Nafta","Colectivo/Tren","Peaje"] },
-          { name:"Salud", subs:["Obra social","Medicamentos"] },
-          { name:"Gustos", subs:["Salida","Delivery","Ropa"] }
-        ],
-        payMethods: ["Efectivo","Mercado Pago","Banco","Tarjeta"]
+        categories: [], // sin ejemplos
+        payMethods: [
+          // métodos reales (disponible)
+          { name:"Efectivo", opening: 0 },
+          { name:"Mercado Pago", opening: 0 },
+          { name:"Banco", opening: 0 },
+          // tarjeta fija (deuda)
+          { name:"Tarjeta", opening: 0, isCard:true }
+        ]
       },
       movements: [
-        // {id, ts, type:'in'|'out', amount, category, subcategory, payMethod, note}
+        // {id, ts, type:'in'|'out', amount, method, category, subcategory, note, meta?:{kind:'card_purchase'|'card_payment', debtId?}}
+      ],
+      cardDebts: [
+        // {id, desc, total, cuotas, firstDueISO, paidCount, createdISO}
+      ],
+      suggestions: [
+        // {id, name}
       ]
     };
   }
@@ -472,53 +533,75 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
       const raw = localStorage.getItem(KEY);
       if(!raw) return defaultState();
       const st = JSON.parse(raw);
+
       // sanitize
-      if(typeof st.openingBalance !== "number") st.openingBalance = 0;
       if(!st.master) st.master = defaultState().master;
-      if(!Array.isArray(st.master.categories)) st.master.categories = defaultState().master.categories;
+      if(!Array.isArray(st.master.categories)) st.master.categories = [];
       if(!Array.isArray(st.master.payMethods)) st.master.payMethods = defaultState().master.payMethods;
+
+      // asegurar tarjeta fija
+      const hasCard = st.master.payMethods.some(m => m && String(m.name).toLowerCase()==="tarjeta");
+      if(!hasCard) st.master.payMethods.push({ name:"Tarjeta", opening:0, isCard:true });
+      st.master.payMethods = st.master.payMethods.map(m=>{
+        if(!m || !m.name) return null;
+        const name = String(m.name);
+        const isCard = String(name).toLowerCase()==="tarjeta" || !!m.isCard;
+        return { name, opening: Number(m.opening)||0, isCard };
+      }).filter(Boolean);
+
       if(!Array.isArray(st.movements)) st.movements = [];
+      if(!Array.isArray(st.cardDebts)) st.cardDebts = [];
+      if(!Array.isArray(st.suggestions)) st.suggestions = [];
+
       return st;
     }catch(e){
       return defaultState();
     }
   }
+  let state = load();
   function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
 
-  let state = load();
-
-  // --- Date helpers
-  function monthKey(d){
-    const y=d.getFullYear();
-    const m=String(d.getMonth()+1).padStart(2,"0");
-    return `${y}-${m}`;
-  }
-  function humanDate(d){
-    const dd=String(d.getDate()).padStart(2,"0");
-    const mm=String(d.getMonth()+1).padStart(2,"0");
-    const yy=d.getFullYear();
-    return `${dd}/${mm}/${yy}`;
-  }
-  function startOfMonth(d=new Date()){ return new Date(d.getFullYear(), d.getMonth(), 1, 0,0,0,0); }
-  function endOfMonth(d=new Date()){ return new Date(d.getFullYear(), d.getMonth()+1, 0, 23,59,59,999); }
-  function parseDateInput(v){
-    const [y,m,dd]=v.split("-").map(Number);
-    return new Date(y, m-1, dd, 12,0,0,0);
-  }
-  function toDateInputValue(d){
-    const pad=n=>String(n).padStart(2,"0");
-    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  // ===== Computations
+  function isCardMethod(methodName){
+    return String(methodName||"").toLowerCase()==="tarjeta";
   }
 
-  // --- Computations
-  function computeBalance(){
-    let bal = Number(state.openingBalance)||0;
-    for(const m of state.movements){
-      const amt = Number(m.amount)||0;
-      if(m.type==="in") bal += amt;
-      else if(m.type==="out") bal -= amt;
+  function methodBalance(methodName){
+    const m = state.master.payMethods.find(x=>x.name===methodName);
+    const opening = m ? Number(m.opening)||0 : 0;
+
+    // Tarjeta no es disponible (es deuda)
+    if(isCardMethod(methodName)) return opening;
+
+    let bal = opening;
+    for(const mv of state.movements){
+      if(mv.method !== methodName) continue;
+      const amt = Number(mv.amount)||0;
+      if(mv.type==="in") bal += amt;
+      else if(mv.type==="out") bal -= amt;
     }
     return bal;
+  }
+
+  function totalDisponible(){
+    // suma de métodos reales (excluye Tarjeta)
+    return state.master.payMethods
+      .filter(m => !isCardMethod(m.name))
+      .reduce((acc,m)=> acc + methodBalance(m.name), 0);
+  }
+
+  function cardDebtTotal(){
+    // deuda restante total = suma de (total - pagado) de cada debt
+    let sum = 0;
+    for(const d of state.cardDebts){
+      const total = Number(d.total)||0;
+      const cuotas = Math.max(1, Number(d.cuotas)||1);
+      const paid = Math.max(0, Number(d.paidCount)||0);
+      const per = Math.round(total / cuotas);
+      const paidAmt = Math.min(total, per * paid);
+      sum += Math.max(0, total - paidAmt);
+    }
+    return sum;
   }
 
   function monthTotals(key){
@@ -526,65 +609,84 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
     const from = new Date(yy, mm-1, 1, 0,0,0,0);
     const to = new Date(yy, mm, 0, 23,59,59,999);
     let inn=0, out=0;
-    for(const m of state.movements){
-      const t = new Date(m.ts);
-      if(t>=from && t<=to){
-        const amt = Number(m.amount)||0;
-        if(m.type==="in") inn += amt;
-        else if(m.type==="out") out += amt;
-      }
+    for(const mv of state.movements){
+      const t = new Date(mv.ts);
+      if(isNaN(t) || t<from || t>to) continue;
+      const amt = Number(mv.amount)||0;
+      if(mv.type==="in") inn += amt;
+      else if(mv.type==="out") out += amt;
     }
-    return { inn, out, net: inn - out };
+    return {inn,out,net:inn-out};
   }
 
-  function totalsByCategoryForMonth(key){
-    const [yy, mm] = key.split("-").map(Number);
-    const from = new Date(yy, mm-1, 1, 0,0,0,0);
-    const to = new Date(yy, mm, 0, 23,59,59,999);
-    const map = new Map();
-    for(const m of state.movements){
-      const t = new Date(m.ts);
-      if(t<from || t>to) continue;
-      if(m.type!=="out") continue; // para ver "gastos"
-      const cat = m.category || "Sin categoría";
-      map.set(cat, (map.get(cat)||0) + (Number(m.amount)||0));
+  function movementKindLabel(mv){
+    const k = mv?.meta?.kind;
+    if(k==="card_purchase") return "Compra tarjeta";
+    if(k==="card_payment") return "Pago tarjeta";
+    return "";
+  }
+
+  function lastMovements(n=8){
+    return [...state.movements]
+      .sort((a,b)=> new Date(b.ts) - new Date(a.ts))
+      .slice(0,n);
+  }
+
+  // ===== Cuotas / upcoming
+  function installmentsForDebt(debt){
+    const cuotas = Math.max(1, Number(debt.cuotas)||1);
+    const total = Number(debt.total)||0;
+    const per = Math.round(total / cuotas);
+    const first = new Date(debt.firstDueISO);
+    const arr = [];
+    for(let i=0;i<cuotas;i++){
+      const due = addMonths(first, i);
+      arr.push({
+        debtId: debt.id,
+        idx: i+1,
+        cuotas,
+        amount: (i===cuotas-1) ? Math.max(0, total - per*(cuotas-1)) : per, // ajusta última
+        dueISO: due.toISOString()
+      });
     }
-    const arr = Array.from(map.entries()).map(([cat, total]) => ({cat, total}));
-    arr.sort((a,b)=>b.total-a.total);
     return arr;
   }
 
-  // --- UI refs
-  const $$ = sel => document.querySelector(sel);
-  const $$$ = sel => Array.from(document.querySelectorAll(sel));
+  function upcomingInstallments(daysAhead=15){
+    const now = new Date();
+    const limit = new Date(now);
+    limit.setDate(limit.getDate()+daysAhead);
 
-  const saldoTop = $$("#saldoTop");
-  const kpiSaldo = $$("#kpiSaldo");
-  const kpiInMes = $$("#kpiInMes");
-  const kpiOutMes = $$("#kpiOutMes");
-  const kpiNetoMes = $$("#kpiNetoMes");
-  const lastMovs = $$("#lastMovs");
-  const byCat = $$("#byCat");
-  const movTable = $$("#movTable");
+    const items = [];
+    for(const debt of state.cardDebts){
+      const paid = Math.max(0, Number(debt.paidCount)||0);
+      const inst = installmentsForDebt(debt);
+      for(const it of inst){
+        if(it.idx <= paid) continue; // ya pagada
+        const due = new Date(it.dueISO);
+        if(due >= new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0,0,0,0) && due <= limit){
+          items.push({...it, desc: debt.desc});
+        }
+      }
+    }
+    items.sort((a,b)=> new Date(a.dueISO) - new Date(b.dueISO));
+    return items;
+  }
 
-  const filterMonth = $$("#filterMonth");
-  const filterType = $$("#filterType");
+  // ===== Suggestions (simple)
+  // El usuario pidió "recomendación de gastos a pagar".
+  // Acá lo hacemos como lista editable tipo "check mental": no auto-detecta todavía.
+  function ensureDefaultSuggestions(){
+    // sin ejemplos por defecto. Si no hay, mostramos vacío con botón de agregar.
+    if(!Array.isArray(state.suggestions)) state.suggestions = [];
+  }
 
-  const newCat = $$("#newCat");
-  const newSub = $$("#newSub");
-  const catForSub = $$("#catForSub");
-  const catList = $$("#catList");
-
-  const newPay = $$("#newPay");
-  const payList = $$("#payList");
-
-  const openingBalance = $$("#openingBalance");
-
-  // Modal
+  // ===== UI: Modal
   const modalWrap = $$("#modalWrap");
   const modalTitle = $$("#modalTitle");
   const modalBody = $$("#modalBody");
-  const btnClose = $$("#btnClose");
+  $$("#btnClose").addEventListener("click", closeModal);
+  modalWrap.addEventListener("click", (e)=>{ if(e.target===modalWrap) closeModal(); });
 
   function openModal(title, html){
     modalTitle.textContent = title;
@@ -595,133 +697,259 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
     modalWrap.style.display = "none";
     modalBody.innerHTML = "";
   }
-  btnClose.addEventListener("click", closeModal);
-  modalWrap.addEventListener("click", (e)=>{ if(e.target===modalWrap) closeModal(); });
 
-  // --- Views
+  // ===== UI refs
+  const disponibleTop = $$("#disponibleTop");
+
+  const kpiInMes = $$("#kpiInMes");
+  const kpiOutMes = $$("#kpiOutMes");
+  const kpiNetoMes = $$("#kpiNetoMes");
+  const kpiCardDebt = $$("#kpiCardDebt");
+
+  const byMethod = $$("#byMethod");
+  const upcoming = $$("#upcoming");
+  const lastMovsEl = $$("#lastMovs");
+  const suggestedEl = $$("#suggested");
+
+  const filterMonth = $$("#filterMonth");
+  const filterType = $$("#filterType");
+  const pillMes = $$("#pillMes");
+  const movTable = $$("#movTable");
+
+  const newCat = $$("#newCat");
+  const newSub = $$("#newSub");
+  const catForSub = $$("#catForSub");
+  const catList = $$("#catList");
+
+  const newPay = $$("#newPay");
+  const payList = $$("#payList");
+
+  // ===== Views
   function setView(name){
     $$$(".tab").forEach(t => t.classList.toggle("active", t.dataset.view===name));
     $$$(".view").forEach(v => v.style.display = "none");
     const el = document.getElementById("view-"+name);
     if(el) el.style.display = "";
-    render();
+    renderAll();
+    // scroll suave arriba cuando cambia vista (mejor “skroll”)
+    window.scrollTo({top:0, behavior:"smooth"});
   }
   $$$(".tab").forEach(t => t.addEventListener("click", ()=>setView(t.dataset.view)));
 
-  // --- Populate selects
+  // ===== Populate month filter
   function populateMonthFilter(){
     const current = monthKey(new Date());
     const months = new Set([current]);
-    for(const m of state.movements){
-      const t = new Date(m.ts);
+
+    for(const mv of state.movements){
+      const t = new Date(mv.ts);
       if(!isNaN(t)) months.add(monthKey(t));
     }
+
+    // añade mes anterior por comodidad
     const now = new Date();
     months.add(monthKey(new Date(now.getFullYear(), now.getMonth()-1, 1)));
-    months.add(monthKey(new Date(now.getFullYear(), now.getMonth()+1, 1)));
 
     const sorted = Array.from(months).sort().reverse();
     const prev = filterMonth.value;
 
-    filterMonth.innerHTML = sorted.map(k => {
-      const [y, mm] = k.split("-");
-      const name = new Date(Number(y), Number(mm)-1, 1).toLocaleDateString("es-AR", { month:"long", year:"numeric" });
-      return `<option value="${k}">${name[0].toUpperCase()+name.slice(1)}</option>`;
-    }).join("");
-
+    filterMonth.innerHTML = sorted.map(k => `<option value="${k}">${humanMonth(k)}</option>`).join("");
     filterMonth.value = prev || current;
+    pillMes.textContent = humanMonth(filterMonth.value);
   }
 
-  function populateCatSelect(selectEl, selected=null){
-    selectEl.innerHTML = state.master.categories.map((c,i)=>`<option value="${i}">${escapeHtml(c.name)}</option>`).join("");
-    if(selected!==null && selected!==undefined) selectEl.value = String(selected);
+  // ===== Categories helpers
+  function getCategories(){
+    return state.master.categories || [];
+  }
+  function getSubcats(catName){
+    const c = getCategories().find(x=>x.name===catName);
+    return c ? (c.subs||[]) : [];
   }
 
-  function populatePaySelect(selectEl, selected=null){
-    selectEl.innerHTML = state.master.payMethods.map(p=>`<option value="${escapeAttr(p)}">${escapeHtml(p)}</option>`).join("");
-    if(selected) selectEl.value = selected;
+  // ===== Payment methods helpers
+  function getRealMethods(){
+    return state.master.payMethods.filter(m=>!isCardMethod(m.name));
+  }
+  function getAllMethods(){
+    return state.master.payMethods.slice();
   }
 
-  // --- Rendering
-  function render(){
-    // header
-    const bal = computeBalance();
-    saldoTop.textContent = money(bal);
-    kpiSaldo.textContent = money(bal);
-    kpiSaldo.classList.remove("good","bad");
-    kpiSaldo.classList.add(bal>=0 ? "good" : "bad");
+  // ===== Render
+  function renderAll(){
+    save();
 
-    // month totals
+    // top disponible
+    const disp = totalDisponible();
+    disponibleTop.textContent = money(disp);
+
+    // kpis mes
     populateMonthFilter();
-    const selMonth = filterMonth.value || monthKey(new Date());
-    const mt = monthTotals(selMonth);
+    const mk = filterMonth.value || monthKey(new Date());
+    pillMes.textContent = humanMonth(mk);
+
+    const mt = monthTotals(monthKey(new Date())); // dashboard usa mes actual
     kpiInMes.textContent = money(mt.inn);
     kpiOutMes.textContent = money(mt.out);
     kpiNetoMes.textContent = money(mt.net);
     kpiNetoMes.classList.remove("good","bad");
     kpiNetoMes.classList.add(mt.net>=0 ? "good" : "bad");
 
-    renderLastMovs();
-    renderByCategory(selMonth);
-    renderMovTable();
-    renderMaster();
-    renderPays();
+    const cd = cardDebtTotal();
+    kpiCardDebt.textContent = money(cd);
+    kpiCardDebt.classList.remove("good","bad");
+    kpiCardDebt.classList.add(cd>0 ? "bad" : "good");
 
-    // opening balance input (formatted)
-    openingBalance.value = (state.openingBalance ? money(state.openingBalance) : "");
-    save();
+    renderByMethod();
+    renderUpcoming();
+    renderLastMovs();
+    renderSuggested();
+    renderMovementsTable();
+    renderMasterCats();
+    renderMasterPays();
   }
 
-  function renderLastMovs(){
-    const items = [...state.movements]
-      .sort((a,b)=> new Date(b.ts) - new Date(a.ts))
-      .slice(0, 8);
-
-    if(items.length===0){
-      lastMovs.innerHTML = `<div class="empty">Todavía no cargaste movimientos. Meté una entrada o salida y arrancamos.</div>`;
+  function renderByMethod(){
+    const real = getRealMethods();
+    if(real.length===0){
+      byMethod.innerHTML = `<div class="empty">No hay métodos reales. Agregá en Hoja Maestro.</div>`;
       return;
     }
-
-    lastMovs.innerHTML = items.map(m=>{
-      const t = new Date(m.ts);
-      const badge = m.type==="in"
-        ? `<span class="badge in">Entrada</span>`
-        : `<span class="badge out">Salida</span>`;
-      const sign = m.type==="in" ? "+" : "-";
-      const cls = m.type==="in" ? "good" : "bad";
-      const main = `${badge} <span class="muted mono">${humanDate(t)}</span>`;
-      const cat = [m.category, m.subcategory].filter(Boolean).join(" · ");
-      const pm = m.payMethod ? ` · <span class="muted">${escapeHtml(m.payMethod)}</span>` : "";
-      const note = (m.note||"").trim();
+    byMethod.innerHTML = real.map(m=>{
+      const bal = methodBalance(m.name);
+      const cls = bal>=0 ? "good" : "bad";
       return `
-        <div class="kpi" style="display:flex;gap:10px;align-items:center;justify-content:space-between">
-          <div style="min-width:0">
-            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">${main}</div>
-            <div style="margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
-              ${escapeHtml(cat || "Sin categoría")}${pm}${note ? ` · <span class="muted">${escapeHtml(note)}</span>` : ""}
-            </div>
+        <div class="listItem">
+          <div>
+            <div style="font-weight:950">${escapeHtml(m.name)}</div>
+            <div class="tiny">Saldo inicial: <span class="mono">${money(m.opening||0)}</span></div>
           </div>
-          <div class="mono value ${cls}" style="font-size:16px">${sign} ${money(m.amount)}</div>
+          <div class="mono value ${cls}" style="font-size:16px">${money(bal)}</div>
         </div>
       `;
     }).join("");
   }
 
-  function renderByCategory(monthKeySel){
-    const arr = totalsByCategoryForMonth(monthKeySel);
-    if(arr.length===0){
-      byCat.innerHTML = `<div class="empty">Todavía no hay gastos este mes.</div>`;
+  function renderUpcoming(){
+    const items = upcomingInstallments(15);
+    if(items.length===0){
+      upcoming.innerHTML = `<div class="empty">No hay cuotas venciendo en los próximos 15 días.</div>`;
       return;
     }
-    byCat.innerHTML = arr.map(x=>`
-      <div class="kpi" style="display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:10px">
-        <div><b>${escapeHtml(x.cat)}</b></div>
-        <div class="mono value bad" style="font-size:16px">- ${money(x.total)}</div>
-      </div>
-    `).join("");
+    upcoming.innerHTML = items.map(it=>{
+      const due = new Date(it.dueISO);
+      const days = Math.ceil((due - new Date()) / (1000*60*60*24));
+      const tag = days <= 0 ? `<span class="badge out">Vence hoy</span>` : (days<=3 ? `<span class="badge out">En ${days} día(s)</span>` : `<span class="badge">En ${days} días</span>`);
+      return `
+        <div class="listItem">
+          <div style="min-width:0">
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <span class="badge card">Cuota ${it.idx}/${it.cuotas}</span>
+              ${tag}
+              <span class="muted mono">${humanDate(due)}</span>
+            </div>
+            <div style="margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+              <b>${escapeHtml(it.desc || "Tarjeta")}</b>
+            </div>
+            <div class="tiny">Monto: <span class="mono">${money(it.amount)}</span></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+            <div class="mono" style="font-weight:950">${money(it.amount)}</div>
+            <button class="btn small good" data-payinst="${it.debtId}|${it.idx}">Marcar pagado</button>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    upcoming.querySelectorAll("[data-payinst]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const [debtId, idxStr] = btn.getAttribute("data-payinst").split("|");
+        const idx = Number(idxStr);
+        openPayInstallmentModal(debtId, idx);
+      });
+    });
   }
 
-  function renderMovTable(){
+  function renderLastMovs(){
+    const items = lastMovements(10);
+    if(items.length===0){
+      lastMovsEl.innerHTML = `<div class="empty">Todavía no cargaste movimientos.</div>`;
+      return;
+    }
+    lastMovsEl.innerHTML = items.map(mv=>{
+      const t = new Date(mv.ts);
+      const badge = mv.type==="in" ? `<span class="badge in">Entrada</span>` : `<span class="badge out">Salida</span>`;
+      const kind = movementKindLabel(mv);
+      const kindBadge = kind ? `<span class="badge">${escapeHtml(kind)}</span>` : "";
+      const cls = mv.type==="in" ? "good" : "bad";
+      const sign = mv.type==="in" ? "+" : "-";
+      const cat = [mv.category, mv.subcategory].filter(Boolean).join(" · ") || "—";
+      const note = (mv.note||"").trim();
+      return `
+        <div class="listItem">
+          <div style="min-width:0">
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              ${badge}
+              ${kindBadge}
+              <span class="muted mono">${humanDate(t)}</span>
+            </div>
+            <div style="margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+              ${escapeHtml(cat)} · <span class="muted">${escapeHtml(mv.method||"—")}</span>
+              ${note ? ` · <span class="muted">${escapeHtml(note)}</span>` : ""}
+            </div>
+          </div>
+          <div class="mono value ${cls}" style="font-size:16px;white-space:nowrap">${sign} ${money(mv.amount)}</div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function renderSuggested(){
+    ensureDefaultSuggestions();
+    const list = state.suggestions || [];
+    const htmlList = list.length
+      ? list.map(s=>`
+          <div class="listItem">
+            <div style="font-weight:900">${escapeHtml(s.name)}</div>
+            <button class="btn small ghost" data-delsug="${s.id}">Borrar</button>
+          </div>
+        `).join("")
+      : `<div class="empty">Todavía no agregaste nada. Ej: alquiler, internet, seguro, etc.</div>`;
+
+    suggestedEl.innerHTML = `
+      <div class="formGrid">
+        <div class="field">
+          <label>Agregar gasto sugerido</label>
+          <input class="input" id="sugName" placeholder="Ej: Alquiler"/>
+        </div>
+        <div class="field" style="display:flex;align-items:end">
+          <button class="btn primary" id="btnAddSug" style="width:100%">Agregar</button>
+        </div>
+      </div>
+      <div class="hr"></div>
+      ${htmlList}
+    `;
+
+    const btnAdd = $$("#btnAddSug");
+    const inp = $$("#sugName");
+    btnAdd.addEventListener("click", ()=>{
+      const name = (inp.value||"").trim();
+      if(!name) return alert("Escribí un gasto.");
+      state.suggestions.push({id:uid(), name});
+      inp.value = "";
+      renderAll();
+    });
+
+    suggestedEl.querySelectorAll("[data-delsug]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const id = btn.getAttribute("data-delsug");
+        state.suggestions = state.suggestions.filter(x=>x.id!==id);
+        renderAll();
+      });
+    });
+  }
+
+  function renderMovementsTable(){
     const key = filterMonth.value || monthKey(new Date());
     const type = filterType.value || "all";
     const [yy, mm] = key.split("-").map(Number);
@@ -729,12 +957,11 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
     const to = new Date(yy, mm, 0, 23,59,59,999);
 
     const items = [...state.movements]
-      .filter(m=>{
-        const t = new Date(m.ts);
-        if(isNaN(t)) return false;
-        if(t<from || t>to) return false;
+      .filter(mv=>{
+        const t = new Date(mv.ts);
+        if(isNaN(t) || t<from || t>to) return false;
         if(type==="all") return true;
-        return m.type===type;
+        return mv.type===type;
       })
       .sort((a,b)=> new Date(b.ts) - new Date(a.ts));
 
@@ -743,26 +970,29 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
       return;
     }
 
-    const rows = items.map(m=>{
-      const t = new Date(m.ts);
-      const badge = m.type==="in"
+    const rows = items.map(mv=>{
+      const t = new Date(mv.ts);
+      const badge = mv.type==="in"
         ? `<span class="badge in">Entrada</span>`
         : `<span class="badge out">Salida</span>`;
-      const sign = m.type==="in" ? "+" : "-";
-      const cls = m.type==="in" ? "good" : "bad";
-      const cat = [m.category, m.subcategory].filter(Boolean).join(" · ") || "Sin categoría";
-      const pm = m.payMethod || "—";
-      const note = (m.note||"").trim() || "—";
+      const kind = movementKindLabel(mv);
+      const kindBadge = kind ? `<span class="badge">${escapeHtml(kind)}</span>` : "";
+      const sign = mv.type==="in" ? "+" : "-";
+      const cls = mv.type==="in" ? "good" : "bad";
+      const cat = [mv.category, mv.subcategory].filter(Boolean).join(" · ") || "—";
+      const note = (mv.note||"").trim() || "—";
+      const method = mv.method || "—";
+
       return `
         <tr class="tr">
           <td style="width:110px" class="muted mono">${humanDate(t)}</td>
-          <td style="width:120px">${badge}</td>
-          <td style="max-width:320px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(cat)}</td>
-          <td style="width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" class="muted">${escapeHtml(pm)}</td>
+          <td style="width:130px">${badge} ${kindBadge}</td>
+          <td style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(cat)}</td>
+          <td style="width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" class="muted">${escapeHtml(method)}</td>
           <td style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" class="muted">${escapeHtml(note)}</td>
-          <td class="right mono"><b class="${cls}">${sign} ${money(m.amount)}</b></td>
+          <td class="right mono"><b class="${cls}">${sign} ${money(mv.amount)}</b></td>
           <td class="right" style="width:86px">
-            <button class="btn small ghost" data-delmov="${m.id}">Borrar</button>
+            <button class="btn small ghost" data-delmov="${mv.id}">Borrar</button>
           </td>
         </tr>
       `;
@@ -773,27 +1003,36 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
     movTable.querySelectorAll("[data-delmov]").forEach(btn=>{
       btn.addEventListener("click", ()=>{
         const id = btn.getAttribute("data-delmov");
+        // si borra un pago de cuota, NO recalculo paidCount automáticamente (por ahora).
+        // Si querés, lo hacemos “inteligente” después.
         state.movements = state.movements.filter(x=>x.id!==id);
-        render();
+        renderAll();
       });
     });
   }
 
-  function renderMaster(){
-    populateCatSelect(catForSub);
+  function renderMasterCats(){
+    // selector para sub
+    const cats = getCategories();
+    catForSub.innerHTML = cats.length
+      ? cats.map(c=>`<option value="${escapeAttr(c.name)}">${escapeHtml(c.name)}</option>`).join("")
+      : `<option value="">(sin categorías)</option>`;
 
-    if(state.master.categories.length===0){
-      catList.innerHTML = `<div class="empty">No hay categorías. Agregá una arriba.</div>`;
+    if(cats.length===0){
+      catList.innerHTML = `<div class="empty">No hay categorías. Agregá la primera arriba.</div>`;
       return;
     }
 
-    catList.innerHTML = state.master.categories.map((c, idx)=>{
-      const subs = (c.subs||[]).map((s, j)=>`
-        <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)">
-          <div class="muted">${escapeHtml(s)}</div>
-          <button class="btn small ghost" data-delsub="${idx}:${j}">Borrar</button>
-        </div>
-      `).join("") || `<div class="tiny muted">Sin subcategorías</div>`;
+    catList.innerHTML = cats.map((c, idx)=>{
+      const subs = (c.subs||[]);
+      const subsHtml = subs.length
+        ? subs.map((s, j)=>`
+            <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)">
+              <div class="muted">${escapeHtml(s)}</div>
+              <button class="btn small ghost" data-delsub="${idx}:${j}">Borrar</button>
+            </div>
+          `).join("")
+        : `<div class="tiny muted">Sin subcategorías</div>`;
 
       return `
         <div class="kpi" style="margin-bottom:12px">
@@ -802,7 +1041,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
             <button class="btn small bad" data-delcat="${idx}">Borrar categoría</button>
           </div>
           <div class="hr" style="margin:10px 0"></div>
-          ${subs}
+          ${subsHtml}
         </div>
       `;
     }).join("");
@@ -813,8 +1052,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
         const name = state.master.categories[idx]?.name || "esa categoría";
         if(!confirm(`¿Borrar "${name}" y sus subcategorías?`)) return;
         state.master.categories.splice(idx, 1);
-        // también limpias movimientos que usaban esa categoría? No: los dejamos como texto.
-        render();
+        renderAll();
       });
     });
 
@@ -822,201 +1060,104 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
       btn.addEventListener("click", ()=>{
         const [ci, si] = btn.getAttribute("data-delsub").split(":").map(Number);
         state.master.categories[ci].subs.splice(si, 1);
-        render();
+        renderAll();
       });
     });
   }
 
-  function renderPays(){
-    if(state.master.payMethods.length===0){
-      payList.innerHTML = `<div class="empty">No hay métodos. Agregá uno arriba.</div>`;
-      return;
-    }
+  function renderMasterPays(){
+    const methods = getAllMethods();
 
-    payList.innerHTML = state.master.payMethods.map((p, i)=>`
-      <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)">
-        <div><b>${escapeHtml(p)}</b></div>
-        <button class="btn small bad" data-delpay="${i}">Borrar</button>
-      </div>
-    `).join("");
+    payList.innerHTML = methods.map((m, idx)=>{
+      const isCard = isCardMethod(m.name);
+      const badge = isCard ? `<span class="badge card">Tarjeta (deuda)</span>` : `<span class="badge">Método</span>`;
+      const delBtn = isCard ? `` : `<button class="btn small bad" data-delpay="${idx}">Borrar</button>`;
+      return `
+        <div class="listItem">
+          <div style="min-width:0">
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              ${badge}
+              <b>${escapeHtml(m.name)}</b>
+            </div>
+            <div class="tiny">Saldo inicial</div>
+            <input class="input mono" data-open="${escapeAttr(m.name)}" type="tel" inputmode="numeric" placeholder="$ 0" value="${m.opening ? money(m.opening) : ""}"/>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-end">
+            ${delBtn}
+            ${isCard ? `<div class="tiny muted">No se borra 😄</div>` : `<div class="tiny muted">`+money(methodBalance(m.name))+`</div>`}
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    // opening balances change
+    payList.querySelectorAll("[data-open]").forEach(inp=>{
+      inp.addEventListener("input", ()=>fmtMoneyLive(inp));
+      inp.addEventListener("blur", ()=>{
+        const name = inp.getAttribute("data-open");
+        const val = parseMoney(inp.value);
+        const obj = state.master.payMethods.find(x=>x.name===name);
+        if(obj){
+          obj.opening = val;
+          renderAll();
+        }
+      });
+    });
 
     payList.querySelectorAll("[data-delpay]").forEach(btn=>{
       btn.addEventListener("click", ()=>{
         const idx = Number(btn.getAttribute("data-delpay"));
-        const name = state.master.payMethods[idx];
+        const name = state.master.payMethods[idx]?.name;
+        if(!name) return;
+        if(isCardMethod(name)) return;
         if(!confirm(`¿Borrar método "${name}"?`)) return;
         state.master.payMethods.splice(idx, 1);
-        render();
+        renderAll();
       });
     });
   }
 
-  // --- Modal: add movement
-  function showMovementModal(type){
-    const isIn = type === "in";
-    const today = toDateInputValue(new Date());
-
-    // default cat/sub/method
-    const catIndex = 0;
-    const catObj = state.master.categories[catIndex] || { name:"Sin categoría", subs:[] };
-    const subs = catObj.subs || [];
-    const defaultSub = subs[0] || "";
-
-    openModal(isIn ? "Nueva entrada" : "Nueva salida", `
-      <div class="formGrid">
-        <div class="field">
-          <label>Monto</label>
-          <input class="input" id="m_amount" type="tel" inputmode="numeric" autocomplete="off" placeholder="$ 20.000"/>
-          <div class="tiny">Teclado numérico ✅ · Se guarda con formato $ 20.000</div>
-        </div>
-        <div class="field">
-          <label>Fecha</label>
-          <input class="input" id="m_date" type="date" value="${today}"/>
-        </div>
-
-        <div class="field">
-          <label>Categoría</label>
-          <select id="m_cat"></select>
-        </div>
-        <div class="field">
-          <label>Subcategoría</label>
-          <select id="m_sub"></select>
-        </div>
-
-        <div class="field">
-          <label>Método de pago</label>
-          <select id="m_pay"></select>
-        </div>
-        <div class="field">
-          <label>Nota (opcional)</label>
-          <input class="input" id="m_note" type="text" placeholder="Ej: super, nafta, cobré X"/>
-        </div>
-      </div>
-
-      <div class="hr"></div>
-      <div class="btnRow">
-        <button class="btn ${isIn ? "good" : "bad"}" id="m_save">Guardar</button>
-        <button class="btn ghost" id="m_cancel">Cancelar</button>
-      </div>
-    `);
-
-    const m_amount = $$("#m_amount");
-    const m_cat = $$("#m_cat");
-    const m_sub = $$("#m_sub");
-    const m_pay = $$("#m_pay");
-
-    // populate selects
-    populateCatSelect(m_cat, catIndex);
-    populatePaySelect(m_pay, state.master.payMethods[0] || "");
-
-    function refreshSubs(){
-      const idx = Number(m_cat.value || 0);
-      const c = state.master.categories[idx];
-      const subs = (c && c.subs) ? c.subs : [];
-      m_sub.innerHTML = subs.map(s=>`<option value="${escapeAttr(s)}">${escapeHtml(s)}</option>`).join("");
-      if(subs.length===0){
-        m_sub.innerHTML = `<option value="">(sin subcategorías)</option>`;
-      }
-      // si teníamos default
-      if(defaultSub && subs.includes(defaultSub)) m_sub.value = defaultSub;
-    }
-    refreshSubs();
-    m_cat.addEventListener("change", refreshSubs);
-
-    // format money as you type
-    m_amount.addEventListener("input", ()=>{
-      const raw = parseMoney(m_amount.value);
-      m_amount.value = raw ? money(raw) : "";
-    });
-
-    $$("#m_cancel").addEventListener("click", closeModal);
-    $$("#m_save").addEventListener("click", ()=>{
-      const amt = parseMoney(m_amount.value);
-      const date = $$("#m_date").value;
-      const note = ($$("#m_note").value || "").trim();
-
-      if(!amt || amt <= 0){
-        alert("Poné un monto válido (mayor a 0).");
-        return;
-      }
-
-      const catIdx = Number(m_cat.value || 0);
-      const catName = state.master.categories[catIdx]?.name || "";
-      const subName = m_sub.value || "";
-      const pay = m_pay.value || "";
-
-      const ts = parseDateInput(date).toISOString();
-
-      state.movements.push({
-        id: uid(),
-        ts,
-        type: isIn ? "in" : "out",
-        amount: amt,
-        category: catName,
-        subcategory: subName,
-        payMethod: pay,
-        note
-      });
-
-      closeModal();
-      render();
-    });
-
-    setTimeout(()=>m_amount.focus(), 50);
-  }
-
-  // --- Maestro actions
+  // ===== Actions: Maestro
   $$("#btnAddCat").addEventListener("click", ()=>{
-    const name = (newCat.value || "").trim();
+    const name = (newCat.value||"").trim();
     if(!name) return alert("Poné un nombre de categoría.");
-    if(state.master.categories.some(c => c.name.toLowerCase() === name.toLowerCase())){
+    if(state.master.categories.some(c=>c.name.toLowerCase()===name.toLowerCase())){
       return alert("Esa categoría ya existe.");
     }
-    state.master.categories.push({ name, subs: [] });
+    state.master.categories.push({name, subs:[]});
     newCat.value = "";
-    render();
+    renderAll();
   });
 
   $$("#btnAddSub").addEventListener("click", ()=>{
-    const sub = (newSub.value || "").trim();
+    const catName = catForSub.value;
+    const sub = (newSub.value||"").trim();
+    if(!catName) return alert("No hay categorías para agregar subcategoría.");
     if(!sub) return alert("Poné un nombre de subcategoría.");
-    const idx = Number(catForSub.value || 0);
-    const cat = state.master.categories[idx];
-    if(!cat) return alert("No hay categorías.");
+    const cat = state.master.categories.find(c=>c.name===catName);
+    if(!cat) return;
     cat.subs = cat.subs || [];
-    if(cat.subs.some(s => s.toLowerCase() === sub.toLowerCase())){
+    if(cat.subs.some(s=>s.toLowerCase()===sub.toLowerCase())){
       return alert("Esa subcategoría ya existe en esa categoría.");
     }
     cat.subs.push(sub);
     newSub.value = "";
-    render();
+    renderAll();
   });
 
   $$("#btnAddPay").addEventListener("click", ()=>{
-    const p = (newPay.value || "").trim();
-    if(!p) return alert("Poné un método de pago.");
-    if(state.master.payMethods.some(x => x.toLowerCase() === p.toLowerCase())){
+    const p = (newPay.value||"").trim();
+    if(!p) return alert("Poné un método.");
+    if(isCardMethod(p)) return alert("Tarjeta ya está fija.");
+    if(state.master.payMethods.some(x=>x.name.toLowerCase()===p.toLowerCase())){
       return alert("Ese método ya existe.");
     }
-    state.master.payMethods.push(p);
+    state.master.payMethods.push({name:p, opening:0});
     newPay.value = "";
-    render();
+    renderAll();
   });
 
-  // Opening balance formatting + save
-  openingBalance.addEventListener("input", ()=>{
-    const raw = parseMoney(openingBalance.value);
-    openingBalance.value = raw ? money(raw) : "";
-  });
-  $$("#btnSaveOpening").addEventListener("click", ()=>{
-    const v = parseMoney(openingBalance.value);
-    state.openingBalance = v;
-    save();
-    render();
-    alert("Saldo inicial guardado ✅");
-  });
-
-  // --- Backup
+  // ===== Backup
   $$("#btnExport").addEventListener("click", ()=>{
     const blob = new Blob([JSON.stringify(state, null, 2)], {type:"application/json"});
     const url = URL.createObjectURL(blob);
@@ -1036,15 +1177,12 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
     try{
       const incoming = JSON.parse(txt);
       if(!incoming || typeof incoming !== "object") throw new Error("bad");
-      state = {
-        meta: incoming.meta || { createdAt: nowISO(), version: 2 },
-        openingBalance: Number(incoming.openingBalance)||0,
-        master: incoming.master || defaultState().master,
-        movements: Array.isArray(incoming.movements) ? incoming.movements : []
-      };
+      state = incoming;
+      // re-sanitize + asegurar tarjeta
+      state = loadFromObject(state);
       save();
       alert("Backup importado ✅");
-      render();
+      renderAll();
     }catch(err){
       alert("Ese archivo no parece un backup válido.");
     }finally{
@@ -1052,38 +1190,324 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
     }
   });
 
+  function loadFromObject(obj){
+    try{
+      localStorage.setItem("__tmp__", JSON.stringify(obj));
+      const raw = localStorage.getItem("__tmp__");
+      localStorage.removeItem("__tmp__");
+      // reutiliza sanitizer de load()
+      const backup = localStorage.getItem(KEY);
+      localStorage.setItem(KEY, raw);
+      const st = load();
+      if(backup!==null) localStorage.setItem(KEY, backup);
+      else localStorage.removeItem(KEY);
+      return st;
+    }catch(e){
+      return defaultState();
+    }
+  }
+
   $$("#btnWipe").addEventListener("click", ()=>{
-    if(!confirm("¿Seguro que querés borrar TODO? Esto no se puede deshacer.")) return;
+    if(!confirm("¿Seguro que querés borrar TODO? No se puede deshacer.")) return;
     state = defaultState();
     save();
-    render();
+    renderAll();
   });
 
-  // --- Filters
-  filterMonth.addEventListener("change", render);
-  filterType.addEventListener("change", render);
+  // ===== Filters
+  filterMonth.addEventListener("change", renderAll);
+  filterType.addEventListener("change", renderAll);
 
-  // --- Movement buttons
-  $$("#btnAddIn").addEventListener("click", ()=>showMovementModal("in"));
-  $$("#btnAddOut").addEventListener("click", ()=>showMovementModal("out"));
-  $$("#btnAddIn2").addEventListener("click", ()=>showMovementModal("in"));
-  $$("#btnAddOut2").addEventListener("click", ()=>showMovementModal("out"));
-  $$("#quickIn").addEventListener("click", ()=>showMovementModal("in"));
-  $$("#quickOut").addEventListener("click", ()=>showMovementModal("out"));
+  // ===== Add Movement (Dashboard only)
+  $$("#btnQuickIn").addEventListener("click", ()=>openMovementModal("in"));
+  $$("#btnQuickOut").addEventListener("click", ()=>openMovementModal("out"));
 
-  // --- Escape helpers
-  function escapeHtml(s){
-    return String(s)
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
+  function openMovementModal(type){
+    const isIn = type==="in";
+    const today = toDateInputValue(new Date());
+
+    const cats = getCategories();
+    const hasCats = cats.length>0;
+
+    const methods = isIn
+      ? getRealMethods() // entrada no permite Tarjeta
+      : getAllMethods(); // salida permite Tarjeta
+
+    openModal(isIn ? "Nueva entrada" : "Nueva salida", `
+      <div class="formGrid">
+        <div class="field">
+          <label>Monto</label>
+          <input class="input mono" id="m_amount" type="tel" inputmode="numeric" placeholder="$ 20.000"/>
+        </div>
+        <div class="field">
+          <label>Fecha</label>
+          <input class="input" id="m_date" type="date" value="${today}"/>
+        </div>
+
+        <div class="field">
+          <label>Método</label>
+          <select id="m_method">
+            ${methods.map(m=>`<option value="${escapeAttr(m.name)}">${escapeHtml(m.name)}</option>`).join("")}
+          </select>
+          ${isIn ? `<div class="tiny muted">Entrada no usa Tarjeta.</div>` : `<div class="tiny muted">Si elegís Tarjeta, crea deuda + cuotas.</div>`}
+        </div>
+
+        <div class="field">
+          <label>Categoría</label>
+          <select id="m_cat">
+            ${hasCats ? `<option value="">— Elegí —</option>` + cats.map(c=>`<option value="${escapeAttr(c.name)}">${escapeHtml(c.name)}</option>`).join("")
+                     : `<option value="">(sin categorías)</option>`}
+          </select>
+          ${hasCats ? `` : `<div class="tiny muted">Creá categorías en Hoja Maestro.</div>`}
+        </div>
+
+        <div class="field">
+          <label>Subcategoría</label>
+          <select id="m_sub"><option value="">—</option></select>
+        </div>
+
+        <div class="field" style="grid-column:1/-1">
+          <label>Nota (opcional)</label>
+          <input class="input" id="m_note" type="text" placeholder="Ej: super, nafta, cobro, etc."/>
+        </div>
+      </div>
+
+      <div id="cardExtras" style="display:none">
+        <div class="hr"></div>
+        <div class="formGrid">
+          <div class="field">
+            <label>Descripción de la compra</label>
+            <input class="input" id="c_desc" placeholder="Ej: Zapatillas / Electro / etc."/>
+          </div>
+          <div class="field">
+            <label>Cuotas</label>
+            <select id="c_cuotas">
+              ${[1,2,3,4,5,6,9,12,18].map(n=>`<option value="${n}">${n}</option>`).join("")}
+            </select>
+          </div>
+          <div class="field">
+            <label>Vence 1° cuota (fecha)</label>
+            <input class="input" id="c_first" type="date" value="${today}"/>
+          </div>
+          <div class="field">
+            <label>Cuota estimada</label>
+            <input class="input mono" id="c_each" type="text" disabled value="$ 0"/>
+            <div class="tiny muted">La última cuota se ajusta si hay diferencia.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+      <div class="btnRow">
+        <button class="btn ${isIn ? "good" : "bad"}" id="m_save">Guardar</button>
+        <button class="btn ghost" id="m_cancel">Cancelar</button>
+      </div>
+    `);
+
+    const m_amount = $$("#m_amount");
+    const m_method = $$("#m_method");
+    const m_cat = $$("#m_cat");
+    const m_sub = $$("#m_sub");
+    const cardExtras = $$("#cardExtras");
+    const c_desc = () => $$("#c_desc");
+    const c_cuotas = () => $$("#c_cuotas");
+    const c_first = () => $$("#c_first");
+    const c_each = () => $$("#c_each");
+
+    m_amount.addEventListener("input", ()=>fmtMoneyLive(m_amount));
+
+    function refreshSubs(){
+      const cat = m_cat.value;
+      const subs = cat ? getSubcats(cat) : [];
+      m_sub.innerHTML = `<option value="">—</option>` + subs.map(s=>`<option value="${escapeAttr(s)}">${escapeHtml(s)}</option>`).join("");
+    }
+    m_cat.addEventListener("change", refreshSubs);
+    refreshSubs();
+
+    function refreshCardUI(){
+      const isCard = isCardMethod(m_method.value);
+      cardExtras.style.display = (!isIn && isCard) ? "" : "none";
+      if(!isIn && isCard){
+        // calcular cuota estimada en base a monto/cuotas
+        const amt = parseMoney(m_amount.value);
+        const cuotas = Number(c_cuotas().value||1);
+        const each = cuotas>0 ? Math.round(amt / cuotas) : 0;
+        c_each().value = amt ? money(each) : "$ 0";
+      }
+    }
+    m_method.addEventListener("change", refreshCardUI);
+
+    // recalcular cuota si cambia monto/cuotas
+    modalBody.addEventListener("input", (e)=>{
+      if(e.target && (e.target.id==="m_amount" || e.target.id==="c_cuotas")){
+        refreshCardUI();
+      }
+    });
+
+    $$("#m_cancel").addEventListener("click", closeModal);
+
+    $$("#m_save").addEventListener("click", ()=>{
+      const amt = parseMoney(m_amount.value);
+      const date = $$("#m_date").value;
+      const method = m_method.value;
+      const cat = m_cat.value;
+      const sub = m_sub.value || "";
+      const note = ($$("#m_note").value || "").trim();
+
+      if(!amt || amt<=0) return alert("Poné un monto válido.");
+      if(!date) return alert("Elegí una fecha.");
+      if(!method) return alert("Elegí un método.");
+      if(getCategories().length>0 && !cat) return alert("Elegí una categoría (o creá categorías primero).");
+
+      const ts = parseDateInput(date).toISOString();
+
+      // Si es salida con tarjeta: crea DEUDA + movimiento “compra tarjeta”
+      if(!isIn && isCardMethod(method)){
+        const desc = (c_desc().value||"").trim() || "Compra tarjeta";
+        const cuotas = Math.max(1, Number(c_cuotas().value||1));
+        const first = parseDateInput(c_first().value || date).toISOString();
+
+        const debtId = uid();
+        state.cardDebts.push({
+          id: debtId,
+          desc,
+          total: amt,
+          cuotas,
+          firstDueISO: first,
+          paidCount: 0,
+          createdISO: new Date().toISOString()
+        });
+
+        // Registramos el gasto (para totales/registro), pero NO afecta disponible por método.
+        state.movements.push({
+          id: uid(),
+          ts,
+          type: "out",
+          amount: amt,
+          method: "Tarjeta",
+          category: cat || "",
+          subcategory: sub,
+          note: note ? note : `En ${cuotas} cuota(s) · ${desc}`,
+          meta:{kind:"card_purchase", debtId}
+        });
+
+        closeModal();
+        renderAll();
+        return;
+      }
+
+      // Movimiento normal
+      state.movements.push({
+        id: uid(),
+        ts,
+        type: isIn ? "in" : "out",
+        amount: amt,
+        method,
+        category: cat || "",
+        subcategory: sub,
+        note
+      });
+
+      closeModal();
+      renderAll();
+    });
+
+    refreshCardUI();
+    setTimeout(()=>m_amount.focus(), 50);
   }
-  function escapeAttr(s){ return escapeHtml(s).replaceAll("\n"," "); }
 
-  // init
-  render();
+  // ===== Pagar cuota (recordatorio)
+  function openPayInstallmentModal(debtId, idx){
+    const debt = state.cardDebts.find(d=>d.id===debtId);
+    if(!debt) return alert("No encontré esa deuda.");
+
+    const cuotas = Math.max(1, Number(debt.cuotas)||1);
+    const total = Number(debt.total)||0;
+    const per = Math.round(total / cuotas);
+    const amount = (idx===cuotas) ? Math.max(0, total - per*(cuotas-1)) : per;
+
+    const inst = installmentsForDebt(debt).find(x=>x.idx===idx);
+    const due = inst ? new Date(inst.dueISO) : new Date();
+
+    const payMethods = getRealMethods(); // pagar desde método real
+
+    openModal("Marcar cuota como pagada", `
+      <div class="kpi">
+        <div class="label">Deuda</div>
+        <div style="font-weight:950;margin-top:6px">${escapeHtml(debt.desc)}</div>
+        <div class="tiny">Cuota ${idx}/${cuotas} · Vence: <span class="mono">${humanDate(due)}</span></div>
+        <div class="value mono bad" style="font-size:18px;margin-top:10px">${money(amount)}</div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="formGrid">
+        <div class="field">
+          <label>Pagado desde</label>
+          <select id="p_method">
+            ${payMethods.map(m=>`<option value="${escapeAttr(m.name)}">${escapeHtml(m.name)}</option>`).join("")}
+          </select>
+        </div>
+        <div class="field">
+          <label>Fecha de pago</label>
+          <input class="input" id="p_date" type="date" value="${toDateInputValue(new Date())}"/>
+        </div>
+
+        <div class="field" style="grid-column:1/-1">
+          <label>Nota (opcional)</label>
+          <input class="input" id="p_note" placeholder="Ej: pago resumen / pago cuota tarjeta"/>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+      <div class="btnRow">
+        <button class="btn good" id="p_ok">Marcar pagado</button>
+        <button class="btn ghost" id="p_cancel">Cancelar</button>
+      </div>
+    `);
+
+    $$("#p_cancel").addEventListener("click", closeModal);
+    $$("#p_ok").addEventListener("click", ()=>{
+      const method = $$("#p_method").value;
+      const date = $$("#p_date").value;
+      const note = ($$("#p_note").value||"").trim();
+
+      if(!method) return alert("Elegí desde qué método pagaste.");
+      if(!date) return alert("Elegí fecha de pago.");
+
+      // update debt
+      if(Number(debt.paidCount||0) >= idx){
+        closeModal();
+        renderAll();
+        return;
+      }
+      debt.paidCount = Math.max(Number(debt.paidCount||0), idx);
+
+      // movimiento de salida real
+      state.movements.push({
+        id: uid(),
+        ts: parseDateInput(date).toISOString(),
+        type: "out",
+        amount,
+        method,
+        category: "Tarjeta",
+        subcategory: "Pago cuota",
+        note: note || `${debt.desc} · Cuota ${idx}/${cuotas}`,
+        meta:{kind:"card_payment", debtId}
+      });
+
+      closeModal();
+      renderAll();
+    });
+  }
+
+  // ===== Init
+  function init(){
+    ensureDefaultSuggestions();
+    renderAll();
+  }
+  init();
+
 })();
 </script>
 </body>
