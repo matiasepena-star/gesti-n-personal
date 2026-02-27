@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Gestión Personal</title>
+
+<style>
+:root{
+  --bg:#0f1115;
+  --card:#141a24;
+  --stroke:rgba(255,255,255,.08);
+  --text:#e8ecf6;
+  --muted:rgba(232,236,246,.6);
+  --good:#44d07b;
+  --bad:#ff5b6b;
+  --brand:#7aa2ff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui, -apple-system;
+  background:var(--bg);
+  color:var(--text);
+}
+.wrap{max-width:900px;margin:auto;padding:20px}
+h1{margin:0 0 20px}
+.card{
+  background:var(--card);
+  padding:15px;
+  border-radius:14px;
+  margin-bottom:15px;
+  border:1px solid var(--stroke);
+}
+input,select,button{
+  padding:10px;
+  border-radius:10px;
+  border:1px solid var(--stroke);
+  background:#0c1118;
+  color:white;
+}
+button{cursor:pointer;font-weight:bold}
+button.good{background:rgba(68,208,123,.2)}
+button.bad{background:rgba(255,91,107,.2)}
+button.brand{background:rgba(122,162,255,.2)}
+.flex{display:flex;gap:10px;flex-wrap:wrap}
+.kpi{font-size:22px;font-weight:bold}
+.good{color:var(--good)}
+.bad{color:var(--bad)}
+.small{font-size:12px;color:var(--muted)}
+table{width:100%;margin-top:10px}
+td{padding:6px 0;border-bottom:1px solid var(--stroke)}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+<h1>💰 Gestión Personal</h1>
+
+<div class="card">
+  <div>Saldo actual</div>
+  <div id="saldo" class="kpi">$0</div>
+</div>
+
+<div class="card">
+  <h3>Nuevo movimiento</h3>
+  <div class="flex">
+    <input id="monto" type="number" placeholder="Monto"/>
+    <select id="tipo">
+      <option value="in">Entrada</option>
+      <option value="out">Salida</option>
+    </select>
+    <input id="nota" placeholder="Nota"/>
+    <button class="brand" onclick="agregarMovimiento()">Guardar</button>
+  </div>
+</div>
+
+<div class="card">
+  <h3>Agregar deuda / préstamo</h3>
+  <div class="flex">
+    <input id="d_nombre" placeholder="Nombre"/>
+    <input id="d_total" type="number" placeholder="Total"/>
+    <input id="d_cuota" type="number" placeholder="Cuota"/>
+    <input id="d_venc" type="date"/>
+    <button class="brand" onclick="agregarDeuda()">Guardar</button>
+  </div>
+</div>
+
+<div class="card">
+  <h3>Movimientos</h3>
+  <div id="movimientos"></div>
+</div>
+
+<div class="card">
+  <h3>Deudas</h3>
+  <div id="deudas"></div>
+</div>
+
+</div>
+
+<script>
+let data = JSON.parse(localStorage.getItem("gestion_personal")) || {
+  movimientos:[],
+  deudas:[]
+};
+
+function guardar(){
+  localStorage.setItem("gestion_personal",JSON.stringify(data));
+}
+
+function calcularSaldo(){
+  let saldo = 0;
+  data.movimientos.forEach(m=>{
+    if(m.tipo==="in") saldo+=m.monto;
+    else saldo-=m.monto;
+  });
+  return saldo;
+}
+
+function render(){
+  document.getElementById("saldo").innerText = 
+    "$"+calcularSaldo().toLocaleString();
+
+  let movHTML="";
+  data.movimientos.slice().reverse().forEach((m,i)=>{
+    movHTML+=`
+      <div>
+        ${m.tipo==="in"?"🟢":"🔴"} $${m.monto.toLocaleString()} - ${m.nota}
+      </div>
+    `;
+  });
+  document.getElementById("movimientos").innerHTML = movHTML || "<div class='small'>Sin movimientos</div>";
+
+  let deudaHTML="";
+  data.deudas.forEach((d,i)=>{
+    deudaHTML+=`
+      <div class="card">
+        <b>${d.nombre}</b><br/>
+        Total: $${d.total.toLocaleString()}<br/>
+        Cuota: $${d.cuota.toLocaleString()}<br/>
+        Vence: ${d.venc}<br/>
+        <button class="good" onclick="pagarCuota(${i})">Pagar cuota</button>
+      </div>
+    `;
+  });
+  document.getElementById("deudas").innerHTML = deudaHTML || "<div class='small'>Sin deudas</div>";
+}
+
+function agregarMovimiento(){
+  let monto = Number(document.getElementById("monto").value);
+  let tipo = document.getElementById("tipo").value;
+  let nota = document.getElementById("nota").value;
+
+  if(!monto) return alert("Poné un monto");
+
+  data.movimientos.push({monto,tipo,nota});
+  guardar();
+  render();
+  document.getElementById("monto").value="";
+  document.getElementById("nota").value="";
+}
+
+function agregarDeuda(){
+  let nombre=document.getElementById("d_nombre").value;
+  let total=Number(document.getElementById("d_total").value);
+  let cuota=Number(document.getElementById("d_cuota").value);
+  let venc=document.getElementById("d_venc").value;
+
+  if(!nombre||!total||!cuota) return alert("Completá los datos");
+
+  data.deudas.push({nombre,total,cuota,venc});
+  guardar();
+  render();
+}
+
+function pagarCuota(i){
+  let d=data.deudas[i];
+  data.movimientos.push({
+    monto:d.cuota,
+    tipo:"out",
+    nota:"Pago cuota "+d.nombre
+  });
+  guardar();
+  render();
+}
+
+render();
+</script>
+
+</body>
+</html>
