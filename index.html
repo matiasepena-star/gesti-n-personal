@@ -3,643 +3,595 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-<title>Gestión Personal</title>
 <meta name="theme-color" content="#0f1115"/>
-
+<title>Gestión Personal</title>
 <style>
-:root{
-  --bg:#0f1115;
-  --card:#141a24;
-  --stroke:rgba(255,255,255,.10);
-  --text:#e8ecf6;
-  --muted:rgba(232,236,246,.62);
-  --brand:#7aa2ff;
-  --good:#44d07b;
-  --bad:#ff5b6b;
-  --shadow:0 18px 55px rgba(0,0,0,.55);
-  --r2:22px;
-  --press: translateY(1px) scale(.985);
-}
+  :root{
+    --bg:#0f1115;
+    --card:#141822;
+    --card2:#111521;
+    --stroke:rgba(255,255,255,.10);
+    --text:#e8ecf6;
+    --muted:rgba(232,236,246,.62);
+    --brand:#7aa2ff;
+    --good:#44d07b;
+    --bad:#ff5b6b;
+    --shadow: 0 18px 50px rgba(0,0,0,.60);
+    --r:20px;
+    --r2:16px;
+    --press: translateY(1px) scale(.99);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  html{overflow-x:hidden}
+  body{
+    margin:0;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    background:
+      radial-gradient(900px 600px at 12% -10%, rgba(122,162,255,.20), transparent 55%),
+      radial-gradient(900px 600px at 95% 0%, rgba(68,208,123,.14), transparent 55%),
+      radial-gradient(900px 600px at 30% 110%, rgba(255,91,107,.12), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    overflow-x:hidden;
+  }
 
-*{box-sizing:border-box}
+  .wrap{max-width:980px;margin:0 auto;padding:14px 14px 90px;overflow-x:hidden}
+  .top{
+    display:flex;align-items:center;gap:12px;
+    margin:6px 0 10px;
+  }
+  .logo{
+    width:48px;height:48px;border-radius:14px;
+    background: linear-gradient(135deg, rgba(122,162,255,.95), rgba(68,208,123,.85));
+    box-shadow: var(--shadow);
+    flex:0 0 auto;
+  }
+  .title{min-width:0}
+  h1{
+    font-size:28px;line-height:1.08;margin:0;
+    letter-spacing:.2px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .sub{
+    margin-top:4px;font-size:13px;color:var(--muted);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
 
-html,body{
-  height:100%;
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+  .pillRow{
+    display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+    margin:10px 0 12px;
+  }
+  .pill{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:10px 12px;border-radius:999px;
+    border:1px solid var(--stroke);
+    background: rgba(20,24,34,.55);
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    max-width:100%;
+  }
+  .pill .label{font-size:13px;color:var(--muted)}
+  .pill .value{font-weight:950}
+  .mono{font-variant-numeric: tabular-nums; font-feature-settings:"tnum" 1; letter-spacing:.2px}
 
-  /* ✅ scroll SOLO vertical */
-  overflow-x:hidden;
-  overscroll-behavior: none;
-}
+  .tabs{
+    display:flex;gap:10px;flex-wrap:wrap;
+    margin:10px 0 12px;
+    overflow-x:hidden;
+  }
+  .tab{
+    border:1px solid var(--stroke);
+    background: rgba(20,24,34,.55);
+    color:var(--text);
+    padding:12px 14px;
+    border-radius:999px;
+    font-weight:850;
+    cursor:pointer;
+    user-select:none;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .08s ease, filter .15s ease, background .15s ease;
+  }
+  .tab.active{
+    background: rgba(122,162,255,.18);
+    border-color: rgba(122,162,255,.35);
+  }
 
-body{
-  -webkit-tap-highlight-color: transparent;
-}
+  .card{
+    background: linear-gradient(180deg, rgba(20,24,34,.85), rgba(17,21,33,.70));
+    border:1px solid var(--stroke);
+    border-radius: var(--r);
+    box-shadow: var(--shadow);
+    padding:14px;
+    margin:12px 0;
+    overflow:hidden;
+  }
+  .card h2{
+    margin:0 0 10px;
+    font-size:22px;
+    letter-spacing:.2px;
+  }
+  .muted{color:var(--muted)}
+  .tiny{font-size:12px;color:var(--muted)}
+  .hr{height:1px;background:rgba(255,255,255,.08);margin:12px 0}
 
-a{color:inherit}
-.wrap{
-  max-width:980px;
-  margin:0 auto;
-  padding:14px 12px 44px;
-  overflow-x:hidden; /* ✅ */
-}
+  .grid2{display:grid;grid-template-columns: 1fr 1fr; gap:12px}
+  @media (max-width:720px){ .grid2{grid-template-columns:1fr} }
 
-/* Top */
-.top{
-  position:sticky;top:0;z-index:20;
-  background:rgba(15,17,21,.94);
-  border-bottom:1px solid var(--stroke);
-  backdrop-filter: blur(10px);
-  overflow-x:hidden; /* ✅ */
-}
-.topInner{max-width:980px;margin:0 auto;padding:12px 12px}
-.row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-.title{display:flex;gap:10px;align-items:center}
-.logo{
-  width:38px;height:38px;border-radius:12px;
-  background:linear-gradient(135deg, rgba(122,162,255,.95), rgba(68,208,123,.65));
-  box-shadow:0 12px 26px rgba(0,0,0,.35);
-}
-h1{margin:0;font-size:15px;letter-spacing:.2px}
-.sub{margin-top:2px;font-size:12px;color:var(--muted)}
-.pill{
-  display:inline-flex;gap:8px;align-items:center;
-  padding:9px 10px;border-radius:999px;
-  border:1px solid var(--stroke);
-  background:rgba(255,255,255,.04);
-  max-width:100%;
-}
-.pill b{font-size:12px}
-.pill span{font-size:12px;color:var(--muted);white-space:nowrap}
+  .kpi{
+    border:1px solid rgba(255,255,255,.10);
+    background: rgba(15,17,21,.40);
+    border-radius: var(--r2);
+    padding:12px;
+  }
+  .kpi .label{font-size:12px;color:var(--muted)}
+  .kpi .value{font-size:20px;font-weight:950;margin-top:4px}
+  .good{color:var(--good)}
+  .bad{color:var(--bad)}
 
-/* Tabs */
-.nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.tab{
-  border:1px solid var(--stroke);
-  background:rgba(255,255,255,.03);
-  color:var(--text);
-  padding:10px 12px;border-radius:999px;
-  cursor:pointer;
-  font-weight:900;font-size:13px;
-  transition:.10s transform,.10s background,.10s border-color,.10s box-shadow;
-  user-select:none;
-  -webkit-tap-highlight-color: transparent;
-}
-.tab:active{transform:var(--press)}
-.tab.active{
-  background:rgba(122,162,255,.16);
-  border-color:rgba(122,162,255,.35);
-}
+  .btnRow{
+    display:flex;gap:10px;flex-wrap:wrap;
+    margin-top:10px;
+  }
+  .btn{
+    border:1px solid var(--stroke);
+    background: rgba(20,24,34,.55);
+    color:var(--text);
+    padding:12px 14px;
+    border-radius: 16px;
+    font-weight:900;
+    cursor:pointer;
+    user-select:none;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .08s ease, filter .15s ease, background .15s ease;
+    min-width: 140px;
+  }
+  .btn.small{padding:9px 10px;border-radius:14px;min-width:auto;font-weight:900}
+  .btn.primary{background: rgba(122,162,255,.18); border-color: rgba(122,162,255,.35)}
+  .btn.good{background: rgba(68,208,123,.14); border-color: rgba(68,208,123,.30)}
+  .btn.bad{background: rgba(255,91,107,.14); border-color: rgba(255,91,107,.30)}
+  .btn.ghost{background: rgba(20,24,34,.25)}
+  .btn:active{transform: var(--press); filter: brightness(1.05)}
+  .btnRow.quick{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  @media (max-width:520px){
+    .btnRow.quick{grid-template-columns:1fr 1fr}
+  }
 
-/* Cards */
-.grid{
-  display:grid;
-  grid-template-columns: 1.25fr .95fr;
-  gap:12px;margin-top:14px;
-}
-@media (max-width: 920px){ .grid{grid-template-columns:1fr} }
+  .formGrid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:12px;
+  }
+  @media (max-width:720px){ .formGrid{grid-template-columns:1fr} }
 
-.card{
-  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-  border:1px solid var(--stroke);
-  border-radius:var(--r2);
-  box-shadow:var(--shadow);
-  overflow:hidden;
-}
-.cardHeader{
-  padding:14px 14px 10px;
-  border-bottom:1px solid rgba(255,255,255,.06);
-  display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;
-}
-.cardHeader h2{margin:0;font-size:14px;letter-spacing:.2px}
-.cardHeader p{margin:6px 0 0;font-size:12px;color:var(--muted)}
-.cardBody{padding:14px}
+  .field label{
+    display:block;
+    font-size:12px;
+    color:var(--muted);
+    margin:0 0 6px;
+  }
+  .input, select{
+    width:100%;
+    padding:14px 14px;
+    border-radius: 18px;
+    border:1px solid rgba(255,255,255,.10);
+    background: rgba(15,17,21,.55);
+    color: var(--text);
+    outline: none;
+    font-size:16px; /* evita zoom iPhone */
+  }
+  select{appearance:none}
+  .right{text-align:right}
 
-/* KPIs */
-.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media (max-width: 520px){.kpis{grid-template-columns:1fr}}
-.kpi{
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(0,0,0,.15);
-  border-radius:16px;padding:12px;
-  min-width:0; /* ✅ */
-}
-.kpi .label{font-size:12px;color:var(--muted)}
-.kpi .value{font-size:22px;font-weight:950;margin-top:6px;letter-spacing:.2px}
-.value.good{color:var(--good)}
-.value.bad{color:var(--bad)}
+  .badge{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12px;font-weight:900;
+    padding:6px 10px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.14);
+    background: rgba(15,17,21,.35);
+    color: var(--text);
+  }
+  .badge.in{border-color: rgba(68,208,123,.35); background: rgba(68,208,123,.12)}
+  .badge.out{border-color: rgba(255,91,107,.35); background: rgba(255,91,107,.12)}
+  .badge.card{border-color: rgba(122,162,255,.35); background: rgba(122,162,255,.12)}
 
-/* Buttons */
-.btnRow{display:flex;gap:10px;flex-wrap:wrap}
-.btn{
-  border:1px solid var(--stroke);
-  background:rgba(255,255,255,.04);
-  color:var(--text);
-  padding:11px 12px;border-radius:14px;
-  cursor:pointer;font-weight:950;font-size:13px;
-  display:inline-flex;gap:8px;align-items:center;justify-content:center;
-  transition:.08s transform,.08s background,.08s border-color,.08s box-shadow,.08s filter;
-  user-select:none;
-  box-shadow: 0 10px 22px rgba(0,0,0,.22);
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  min-width:0; /* ✅ */
-}
-.btn:active{
-  transform:var(--press);
-  box-shadow: 0 6px 14px rgba(0,0,0,.20);
-}
-.btn.primary{background:rgba(122,162,255,.18);border-color:rgba(122,162,255,.38)}
-.btn.good{background:rgba(68,208,123,.14);border-color:rgba(68,208,123,.35)}
-.btn.bad{background:rgba(255,91,107,.12);border-color:rgba(255,91,107,.35)}
-.btn.small{padding:8px 10px;border-radius:12px;font-size:12px}
-.btn.big{padding:14px 14px;border-radius:18px;font-size:14px}
-.btn.ghost{background:transparent;box-shadow:none}
+  .list{
+    display:flex;flex-direction:column;gap:10px;
+  }
+  .listItem{
+    border:1px solid rgba(255,255,255,.10);
+    background: rgba(15,17,21,.40);
+    border-radius: 18px;
+    padding:12px;
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    align-items:center;
+    overflow:hidden;
+  }
 
-/* ✅ Feedback universal (JS agrega .pressed) */
-.btn.pressed, .tab.pressed{
-  transform: var(--press);
-  filter: brightness(1.12);
-  box-shadow: 0 6px 14px rgba(0,0,0,.20);
-}
+  .tableWrap{
+    border:1px solid rgba(255,255,255,.10);
+    background: rgba(15,17,21,.40);
+    border-radius: 18px;
+    overflow:auto; /* SOLO en la tabla */
+    -webkit-overflow-scrolling: touch;
+  }
+  .table{width:100%; border-collapse:collapse; min-width:780px;}
+  .tr td{padding:12px;border-bottom:1px solid rgba(255,255,255,.06); vertical-align:middle}
+  .tr:last-child td{border-bottom:none}
 
-/* ✅ Dashboard: dos botones SIEMPRE al lado */
-.quickBtns{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  width:100%;
-}
-.quickBtns .btn{width:100%}
+  .empty{
+    padding:14px;
+    border:1px dashed rgba(255,255,255,.18);
+    border-radius: 18px;
+    color: var(--muted);
+    background: rgba(15,17,21,.25);
+  }
 
-/* Fields */
-.field{min-width:0} /* ✅ */
-.field label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px}
+  /* Fullscreen sheet */
+  .modalWrap{
+    display:none;
+    position:fixed; inset:0;
+    background: rgba(0,0,0,.60);
+    z-index:999;
+  }
+  .modal{
+    position:fixed; inset:0;
+    background: #0b0d12;
+    border-top:1px solid rgba(255,255,255,.10);
+    overflow:auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .modalInner{
+    max-width:980px;
+    margin:0 auto;
+    padding:16px 14px 90px;
+  }
+  .modalHead{
+    position:sticky; top:0;
+    background: rgba(11,13,18,.92);
+    backdrop-filter: blur(14px);
+    border-bottom:1px solid rgba(255,255,255,.08);
+    padding:12px 0;
+    z-index:2;
+  }
+  .modalHeadRow{
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+  }
+  .modalTitle{
+    font-size:22px;font-weight:950;margin:0;
+  }
 
-/* ✅ iOS no haga zoom al escribir */
-.input, select{
-  width:100%;
-  max-width:100%;
-  min-width:0;
-  padding:11px 12px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.18);
-  color:var(--text);
-  outline:none;
-  font-size:16px; /* ✅ clave para que no “agrande” */
-  line-height:1.2;
-}
-
-.formGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media (max-width: 560px){.formGrid{grid-template-columns:1fr}}
-
-.hr{height:1px;background:rgba(255,255,255,.08);margin:12px 0}
-.muted{color:var(--muted)}
-.mono{font-variant-numeric: tabular-nums; font-feature-settings:"tnum" 1}
-
-.badge{
-  display:inline-flex;align-items:center;gap:6px;
-  font-size:12px;font-weight:950;
-  padding:6px 10px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(255,255,255,.04);
-  white-space:nowrap;
-}
-.badge.in{border-color:rgba(68,208,123,.35);background:rgba(68,208,123,.10)}
-.badge.out{border-color:rgba(255,91,107,.35);background:rgba(255,91,107,.10)}
-.badge.card{border-color:rgba(122,162,255,.35);background:rgba(122,162,255,.10)}
-
-.empty{
-  padding:14px;border-radius:16px;
-  border:1px dashed rgba(255,255,255,.18);
-  color:var(--muted);
-  background:rgba(0,0,0,.10);
-  font-size:13px;
-}
-
-.listItem{
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(0,0,0,.14);
-  border-radius:16px;
-  padding:12px;
-  display:flex;gap:10px;align-items:flex-start;justify-content:space-between;
-  min-width:0; /* ✅ */
-}
-.listItem + .listItem{margin-top:10px}
-.tiny{font-size:11px;color:var(--muted)}
-
-/* Tabla: horizontal SOLO acá */
-.tableWrap{
-  overflow-x:auto;
-  -webkit-overflow-scrolling: touch;
-  border-radius:16px;
-}
-.table{width:100%;border-collapse:separate;border-spacing:0 10px;min-width:760px}
-.tr{background:rgba(0,0,0,.16);border:1px solid rgba(255,255,255,.08)}
-.table td{padding:10px 10px;font-size:13px;vertical-align:middle}
-.right{text-align:right}
-
-/* ===== HOJA FULLSCREEN (NO CORRE AL COSTADO) ===== */
-.modalWrap{
-  position:fixed;inset:0;z-index:100;
-  display:none;
-  background:var(--bg);
-  overflow-x:hidden; /* ✅ */
-}
-.modal{
-  width:100%;
-  height:100%;
-  overflow-y:auto;
-  overflow-x:hidden; /* ✅ */
-  -webkit-overflow-scrolling: touch;
-}
-.modalTop{
-  position:sticky;top:0;z-index:2;
-  background:rgba(15,17,21,.96);
-  backdrop-filter: blur(10px);
-  padding:14px 14px 10px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-}
-.modalTop h3{margin:0;font-size:14px}
-.modalBody{
-  padding:14px 14px 90px;
-  overflow-x:hidden; /* ✅ */
-}
+  /* Disable horizontal scroll globally */
+  .wrap, .card, .listItem, .modalInner {overflow-x:hidden}
 </style>
 </head>
 
 <body>
-  <div class="top">
-    <div class="topInner">
-      <div class="row">
-        <div class="title">
-          <div class="logo" aria-hidden="true"></div>
-          <div>
-            <h1>💰 Gestión Personal</h1>
-            <div class="sub">Tarjeta a pagar + cuotas · Disponible por método</div>
-          </div>
+  <div class="wrap">
+    <div class="top">
+      <div class="logo" aria-hidden="true"></div>
+      <div class="title">
+        <h1>💰 Gestión Personal</h1>
+        <div class="sub">Tarjeta a pagar + cuotas · Disponible por método</div>
+      </div>
+    </div>
+
+    <div class="pillRow">
+      <div class="pill">
+        <div class="label">Disponible</div>
+        <div class="value mono" id="disponibleTop">$ 0</div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" data-view="dashboard">Dashboard</div>
+      <div class="tab" data-view="movs">Movimientos</div>
+      <div class="tab" data-view="master">Hoja Maestro</div>
+      <div class="tab" data-view="backup">Backup</div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="view" id="view-dashboard">
+      <div class="card">
+        <h2>Acceso rápido</h2>
+        <div class="btnRow quick">
+          <button class="btn good" id="btnQuickIn">➕ Entrada</button>
+          <button class="btn bad" id="btnQuickOut">➖ Salida</button>
         </div>
-        <div class="pill" title="Disponible total (métodos reales, sin tarjeta)">
-          <b>Disponible</b>
-          <span class="mono" id="disponibleTop">$ 0</span>
+        <div class="hr"></div>
+
+        <div class="grid2">
+          <div class="kpi">
+            <div class="label">Entradas del mes</div>
+            <div class="value mono" id="kpiInMes">$ 0</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Salidas del mes (solo reales)</div>
+            <div class="value mono" id="kpiOutMes">$ 0</div>
+            <div class="tiny">No cuenta “Compra tarjeta”. Solo cuotas/pagos reales.</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Neto del mes</div>
+            <div class="value mono" id="kpiNetoMes">$ 0</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Tarjeta a pagar (deuda)</div>
+            <div class="value mono" id="kpiCardDebt">$ 0</div>
+            <div class="tiny">Baja cuando pagás cuotas.</div>
+          </div>
         </div>
       </div>
 
-      <div class="nav">
-        <button class="tab active" data-view="dashboard">Dashboard</button>
-        <button class="tab" data-view="movs">Movimientos</button>
-        <button class="tab" data-view="maestro">Hoja Maestro</button>
-        <button class="tab" data-view="backup">Backup</button>
+      <div class="card">
+        <h2>Disponible por método</h2>
+        <div class="list" id="byMethod"></div>
+      </div>
+
+      <div class="card">
+        <h2>Cuotas próximas (15 días)</h2>
+        <div class="list" id="upcoming"></div>
+      </div>
+
+      <div class="card">
+        <h2>Últimos movimientos</h2>
+        <div class="muted" style="margin-top:-6px">Chequeo rápido.</div>
+        <div class="hr"></div>
+        <div class="list" id="lastMovs"></div>
+      </div>
+
+      <div class="card">
+        <h2>Gastos sugeridos a pagar</h2>
+        <div class="muted" style="margin-top:-6px">Lista simple editable (tipo checklist mental).</div>
+        <div class="hr"></div>
+        <div id="suggested"></div>
+      </div>
+    </div>
+
+    <!-- MOVIMIENTOS -->
+    <div class="view" id="view-movs" style="display:none">
+      <div class="card">
+        <h2>Movimientos</h2>
+        <div class="muted" style="margin-top:-6px">Filtro por mes y tipo.</div>
+        <div class="hr"></div>
+
+        <div class="formGrid">
+          <div class="field">
+            <label>Mes</label>
+            <select id="filterMonth"></select>
+            <div class="tiny">Mostrando: <span id="pillMes" class="mono"></span></div>
+          </div>
+          <div class="field">
+            <label>Tipo</label>
+            <select id="filterType">
+              <option value="all">Todos</option>
+              <option value="in">Entradas</option>
+              <option value="out">Salidas</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+        <div class="tableWrap">
+          <div id="movTable"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAESTRO -->
+    <div class="view" id="view-master" style="display:none">
+      <div class="card">
+        <h2>Categorías y subcategorías</h2>
+        <div class="hr"></div>
+
+        <div class="formGrid">
+          <div class="field">
+            <label>Nueva categoría</label>
+            <input class="input" id="newCat" placeholder="Ej: Impuestos"/>
+          </div>
+          <div class="field" style="display:flex;align-items:end">
+            <button class="btn primary" id="btnAddCat" style="width:100%">Agregar</button>
+          </div>
+
+          <div class="field">
+            <label>Agregar subcategoría</label>
+            <input class="input" id="newSub" placeholder="Ej: Luz"/>
+          </div>
+          <div class="field">
+            <label>En categoría</label>
+            <select id="catForSub"></select>
+          </div>
+
+          <div class="field" style="grid-column:1/-1">
+            <button class="btn primary" id="btnAddSub" style="width:100%">Agregar subcategoría</button>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+        <div id="catList"></div>
+      </div>
+
+      <div class="card">
+        <h2>Métodos de pago</h2>
+        <div class="muted" style="margin-top:-6px">Efectivo, Mercado Pago, bancos… Tarjeta queda fija.</div>
+        <div class="hr"></div>
+
+        <div class="formGrid">
+          <div class="field">
+            <label>Nuevo método</label>
+            <input class="input" id="newPay" placeholder="Ej: Mercado Pago"/>
+          </div>
+          <div class="field" style="display:flex;align-items:end">
+            <button class="btn primary" id="btnAddPay" style="width:100%">Agregar</button>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+        <div class="list" id="payList"></div>
+      </div>
+    </div>
+
+    <!-- BACKUP -->
+    <div class="view" id="view-backup" style="display:none">
+      <div class="card">
+        <h2>Backup</h2>
+        <div class="muted" style="margin-top:-6px">Exportar / Importar / Reset.</div>
+        <div class="hr"></div>
+
+        <div class="btnRow">
+          <button class="btn primary" id="btnExport">Exportar backup</button>
+          <label class="btn ghost" for="importFile" style="display:inline-flex;align-items:center;justify-content:center">
+            Importar backup
+          </label>
+          <input id="importFile" type="file" accept="application/json" style="display:none"/>
+          <button class="btn bad" id="btnWipe">Borrar todo</button>
+        </div>
+
+        <div class="hr"></div>
+        <div class="empty">
+          Tip: exportá cada tanto. Si cambiás de celu/compu, importás y listo.
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="wrap">
-    <!-- DASHBOARD -->
-    <section class="view" id="view-dashboard">
-      <div class="card">
-        <div class="cardHeader">
-          <div>
-            <h2>Acceso rápido</h2>
-            <p>Dos botones, bien arriba. Rápido y limpio.</p>
-          </div>
-
-          <div class="quickBtns">
-            <button class="btn big good" id="btnQuickIn">➕ Entrada</button>
-            <button class="btn big bad" id="btnQuickOut">➖ Salida</button>
+  <!-- Fullscreen Sheet -->
+  <div class="modalWrap" id="modalWrap">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modalInner">
+        <div class="modalHead">
+          <div class="modalHeadRow">
+            <div class="modalTitle" id="modalTitle">—</div>
+            <button class="btn ghost small" id="btnClose">Cerrar</button>
           </div>
         </div>
-
-        <div class="cardBody">
-          <div class="kpis">
-            <div class="kpi">
-              <div class="label">Entradas del mes</div>
-              <div class="value mono good" id="kpiInMes">$ 0</div>
-            </div>
-            <div class="kpi">
-              <div class="label">Salidas del mes</div>
-              <div class="value mono bad" id="kpiOutMes">$ 0</div>
-            </div>
-            <div class="kpi">
-              <div class="label">Neto del mes</div>
-              <div class="value mono" id="kpiNetoMes">$ 0</div>
-            </div>
-            <div class="kpi">
-              <div class="label">Tarjeta a pagar</div>
-              <div class="value mono" id="kpiCardDebt">$ 0</div>
-              <div class="tiny">Compra con tarjeta = deuda. Pago = baja deuda.</div>
-            </div>
-          </div>
-
-          <div class="hr"></div>
-
-          <h2 style="margin:0 0 10px;font-size:14px">Disponible por método</h2>
-          <div id="byMethod"></div>
-
-          <div class="hr"></div>
-
-          <h2 style="margin:0 0 10px;font-size:14px">Próximos vencimientos (cuotas)</h2>
-          <div id="upcoming"></div>
-        </div>
+        <div id="modalBody"></div>
       </div>
-
-      <div class="grid">
-        <div class="card">
-          <div class="cardHeader">
-            <div>
-              <h2>Últimos movimientos</h2>
-              <p>Chequeo rápido.</p>
-            </div>
-          </div>
-          <div class="cardBody" id="lastMovs"></div>
-        </div>
-
-        <div class="card">
-          <div class="cardHeader">
-            <div>
-              <h2>Gastos sugeridos a pagar</h2>
-              <p>Lista simple editable (tipo checklist mental).</p>
-            </div>
-          </div>
-          <div class="cardBody" id="suggested"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- MOVIMIENTOS -->
-    <section class="view" id="view-movs" style="display:none">
-      <div class="card">
-        <div class="cardHeader">
-          <div>
-            <h2>Movimientos</h2>
-            <p>Acá solo revisás y filtrás (carga desde Dashboard).</p>
-          </div>
-          <div class="pill"><b>Mes</b> <span class="mono" id="pillMes"></span></div>
-        </div>
-        <div class="cardBody">
-          <div class="formGrid" style="margin-bottom:10px">
-            <div class="field">
-              <label>Mes</label>
-              <select id="filterMonth"></select>
-            </div>
-            <div class="field">
-              <label>Tipo</label>
-              <select id="filterType">
-                <option value="all">Todo</option>
-                <option value="in">Entradas</option>
-                <option value="out">Salidas</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="tableWrap">
-            <div id="movTable"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- MAESTRO -->
-    <section class="view" id="view-maestro" style="display:none">
-      <div class="grid">
-        <div class="card">
-          <div class="cardHeader">
-            <div>
-              <h2>Categorías y subcategorías</h2>
-              <p>Arranca limpio. Las armás vos.</p>
-            </div>
-          </div>
-          <div class="cardBody">
-            <div class="formGrid">
-              <div class="field">
-                <label>Nueva categoría</label>
-                <input class="input" id="newCat" placeholder="Ej: Hogar"/>
-              </div>
-              <div class="field" style="display:flex;align-items:end">
-                <button class="btn primary" id="btnAddCat" style="width:100%">Agregar</button>
-              </div>
-
-              <div class="field">
-                <label>Categoría (para subcategoría)</label>
-                <select id="catForSub"></select>
-              </div>
-              <div class="field">
-                <label>Nueva subcategoría</label>
-                <input class="input" id="newSub" placeholder="Ej: Super"/>
-              </div>
-              <div class="field" style="grid-column:1/-1">
-                <button class="btn primary" id="btnAddSub" style="width:100%">Agregar subcategoría</button>
-              </div>
-            </div>
-
-            <div class="hr"></div>
-            <div id="catList"></div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="cardHeader">
-            <div>
-              <h2>Métodos de pago + saldos iniciales</h2>
-              <p>“Tarjeta” es deuda (fija). Los demás son disponible.</p>
-            </div>
-          </div>
-          <div class="cardBody">
-            <div class="formGrid">
-              <div class="field">
-                <label>Nuevo método (real)</label>
-                <input class="input" id="newPay" placeholder="Ej: Brubank / Provincia / etc."/>
-                <div class="tiny">No agregues “Tarjeta”: ya está fija.</div>
-              </div>
-              <div class="field" style="display:flex;align-items:end">
-                <button class="btn primary" id="btnAddPay" style="width:100%">Agregar</button>
-              </div>
-            </div>
-
-            <div class="hr"></div>
-            <div id="payList"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- BACKUP -->
-    <section class="view" id="view-backup" style="display:none">
-      <div class="card">
-        <div class="cardHeader">
-          <div>
-            <h2>Backup</h2>
-            <p>Exportar / importar (para otro celu/PC).</p>
-          </div>
-        </div>
-        <div class="cardBody">
-          <div class="btnRow">
-            <button class="btn primary" id="btnExport">Exportar backup (JSON)</button>
-            <label class="btn" for="importFile" style="cursor:pointer">Importar backup</label>
-            <input id="importFile" type="file" accept="application/json" style="display:none"/>
-            <button class="btn bad" id="btnWipe">Borrar todo</button>
-          </div>
-          <div class="hr"></div>
-          <div class="tiny">Guardado local. Para pasar de dispositivo: exportás/importás.</div>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <!-- HOJA FULLSCREEN -->
-  <div class="modalWrap" id="modalWrap" role="dialog" aria-modal="true">
-    <div class="modal">
-      <div class="modalTop">
-        <h3 id="modalTitle">Nuevo</h3>
-        <button class="btn small ghost" id="btnClose">Cerrar</button>
-      </div>
-      <div class="modalBody" id="modalBody"></div>
     </div>
   </div>
 
 <script>
 (() => {
-  const KEY = "gestion_personal_v3_sheet";
+  "use strict";
+  const KEY = "gestion_personal_v1";
+  const $ = (sel, root=document)=> root.querySelector(sel);
+  const $$ = (sel, root=document)=> root.querySelector(sel);
+  const $$$ = (sel, root=document)=> Array.from(root.querySelectorAll(sel));
 
-  // ✅ Feedback REAL en TODOS los botones/tabs
+  // Small click haptic-ish (sound)
+  const ctx = (window.AudioContext || window.webkitAudioContext) ? new (window.AudioContext || window.webkitAudioContext)() : null;
+  function clickSound(){
+    if(!ctx) return;
+    try{
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = "sine";
+      o.frequency.value = 180;
+      g.gain.value = 0.03;
+      o.connect(g); g.connect(ctx.destination);
+      o.start();
+      o.stop(ctx.currentTime + 0.03);
+    }catch(e){}
+  }
   function bindPressFeedback(){
-    const selector = ".btn, .tab, label.btn";
-    const add = (el)=> el.classList.add("pressed");
-    const rem = (el)=> el.classList.remove("pressed");
-
-    document.addEventListener("pointerdown", (e)=>{
-      const el = e.target.closest(selector);
-      if(!el) return;
-      add(el);
-    }, {passive:true});
-
-    document.addEventListener("pointerup", (e)=>{
-      const el = e.target.closest(selector);
-      if(!el) return;
-      setTimeout(()=>rem(el), 60);
-    }, {passive:true});
-
-    document.addEventListener("pointercancel", (e)=>{
-      const el = e.target.closest(selector);
-      if(!el) return;
-      rem(el);
-    }, {passive:true});
-
-    document.addEventListener("touchend", ()=>{
-      document.querySelectorAll(".pressed").forEach(rem);
-    }, {passive:true});
+    $$$("button.btn, .tab").forEach(el=>{
+      el.addEventListener("click", ()=>clickSound());
+    });
   }
 
-  // Helpers
-  const $$ = sel => document.querySelector(sel);
-  const $$$ = sel => Array.from(document.querySelectorAll(sel));
-  const uid = () => Math.random().toString(36).slice(2, 9) + "-" + Math.random().toString(36).slice(2, 7);
+  function uid(){ return Math.random().toString(16).slice(2) + Date.now().toString(16); }
+  function escapeHtml(s){ return String(s||"").replace(/[&<>"]/g, c=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c])); }
+  function escapeAttr(s){ return escapeHtml(s).replace(/"/g,"&quot;"); }
 
-  const nf0 = new Intl.NumberFormat("es-AR", { maximumFractionDigits: 0 });
-  const money = (n) => "$ " + nf0.format(Math.round(Number(n)||0));
+  function money(n){
+    const v = Math.round(Number(n)||0);
+    const sign = v<0 ? "-" : "";
+    const abs = Math.abs(v);
+    return sign + "$ " + abs.toString().replace(/\B(?=(\d{3})+(?!\d))/g,".");
+  }
   function parseMoney(str){
-    const s = String(str || "").replace(/[^\d]/g, "");
-    return s ? Number(s) : 0;
+    const s = String(str||"").replace(/[^\d-]/g,"");
+    return Number(s||0);
   }
   function fmtMoneyLive(input){
-    const raw = parseMoney(input.value);
-    input.value = raw ? money(raw) : "";
+    const v = parseMoney(input.value);
+    input.value = v ? money(v) : "";
   }
-  function escapeHtml(s){
-    return String(s)
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
-  function escapeAttr(s){ return escapeHtml(s).replaceAll("\n"," "); }
 
-  function monthKey(d){
-    const y=d.getFullYear();
-    const m=String(d.getMonth()+1).padStart(2,"0");
-    return `${y}-${m}`;
+  function toDateInputValue(d){
+    const dd = new Date(d);
+    const y = dd.getFullYear();
+    const m = String(dd.getMonth()+1).padStart(2,"0");
+    const day = String(dd.getDate()).padStart(2,"0");
+    return `${y}-${m}-${day}`;
   }
-  function humanMonth(key){
-    const [y, mm] = key.split("-").map(Number);
-    const name = new Date(y, mm-1, 1).toLocaleDateString("es-AR", {month:"long", year:"numeric"});
-    return name[0].toUpperCase()+name.slice(1);
+  function parseDateInput(yyyy_mm_dd){
+    const [y,m,d] = yyyy_mm_dd.split("-").map(Number);
+    return new Date(y, m-1, d, 12, 0, 0, 0);
   }
   function humanDate(d){
-    const dd=String(d.getDate()).padStart(2,"0");
-    const mm=String(d.getMonth()+1).padStart(2,"0");
-    const yy=d.getFullYear();
-    return `${dd}/${mm}/${yy}`;
+    const dd = new Date(d);
+    const day = String(dd.getDate()).padStart(2,"0");
+    const mon = String(dd.getMonth()+1).padStart(2,"0");
+    const y = dd.getFullYear();
+    return `${day}/${mon}/${y}`;
   }
-  function toDateInputValue(d){
-    const pad=n=>String(n).padStart(2,"0");
-    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  function monthKey(d){
+    const dd = new Date(d);
+    return `${dd.getFullYear()}-${String(dd.getMonth()+1).padStart(2,"0")}`;
   }
-  function parseDateInput(v){
-    const [y,m,dd]=v.split("-").map(Number);
-    return new Date(y, m-1, dd, 12,0,0,0);
+  function humanMonth(key){
+    const [y,m] = key.split("-").map(Number);
+    const names = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+    return `${names[m-1]} ${y}`;
   }
-  function addMonths(d, n){
-    const dt = new Date(d);
-    const day = dt.getDate();
-    dt.setMonth(dt.getMonth()+n);
-    if(dt.getDate() < day) dt.setDate(0);
-    return dt;
+  function addMonths(date, n){
+    const d = new Date(date);
+    const day = d.getDate();
+    d.setMonth(d.getMonth()+n);
+    if(d.getDate() < day) d.setDate(0);
+    return d;
   }
 
   // State
   function defaultState(){
     return {
-      meta:{version:3, createdAt: new Date().toISOString()},
-      master:{
-        categories: [],
+      master: {
         payMethods: [
-          { name:"Efectivo", opening: 0 },
-          { name:"Mercado Pago", opening: 0 },
-          { name:"Banco", opening: 0 },
-          { name:"Tarjeta", opening: 0, isCard:true }
-        ]
+          {name:"Efectivo", opening:0},
+          {name:"Mercado Pago", opening:0},
+          {name:"Banco", opening:0},
+          {name:"Tarjeta", opening:0} // fijo
+        ],
+        categories: []
       },
       movements: [],
-      cardDebts: [],
-      suggestions: []
+      cardDebts: [],     // compras tarjeta
+      suggestions: []    // checklist
     };
   }
   function load(){
     try{
       const raw = localStorage.getItem(KEY);
       if(!raw) return defaultState();
-      const st = JSON.parse(raw);
-
-      if(!st.master) st.master = defaultState().master;
-      if(!Array.isArray(st.master.categories)) st.master.categories = [];
-      if(!Array.isArray(st.master.payMethods)) st.master.payMethods = defaultState().master.payMethods;
-
-      const hasCard = st.master.payMethods.some(m => m && String(m.name).toLowerCase()==="tarjeta");
-      if(!hasCard) st.master.payMethods.push({ name:"Tarjeta", opening:0, isCard:true });
-
-      st.master.payMethods = st.master.payMethods.map(m=>{
-        if(!m || !m.name) return null;
-        const name = String(m.name);
-        const isCard = String(name).toLowerCase()==="tarjeta" || !!m.isCard;
-        return { name, opening: Number(m.opening)||0, isCard };
-      }).filter(Boolean);
-
-      if(!Array.isArray(st.movements)) st.movements = [];
-      if(!Array.isArray(st.cardDebts)) st.cardDebts = [];
-      if(!Array.isArray(st.suggestions)) st.suggestions = [];
-
-      return st;
-    }catch(e){
-      return defaultState();
-    }
+      const s = JSON.parse(raw);
+      // harden
+      if(!s.master) s.master = defaultState().master;
+      if(!Array.isArray(s.master.payMethods)) s.master.payMethods = defaultState().master.payMethods;
+      if(!Array.isArray(s.master.categories)) s.master.categories = [];
+      if(!Array.isArray(s.movements)) s.movements = [];
+      if(!Array.isArray(s.cardDebts)) s.cardDebts = [];
+      if(!Array.isArray(s.suggestions)) s.suggestions = [];
+      // ensure tarjeta exists
+      if(!s.master.payMethods.some(m=>String(m.name).toLowerCase()==="tarjeta")){
+        s.master.payMethods.push({name:"Tarjeta", opening:0});
+      }
+      return s;
+    }catch(e){ return defaultState(); }
   }
   let state = load();
   function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
@@ -685,30 +637,25 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
     return sum;
   }
 
+  // ✅ CLAVE: la compra con tarjeta NO cuenta como salida del mes
   function monthTotals(key){
-  const [yy, mm] = key.split("-").map(Number);
-  const from = new Date(yy, mm-1, 1, 0,0,0,0);
-  const to = new Date(yy, mm, 0, 23,59,59,999);
-  let inn=0, out=0;
-  for(const mv of state.movements){
-    const t = new Date(mv.ts);
-    if(isNaN(t) || t<from || t>to) continue;
-    const amt = Number(mv.amount)||0;
-    if(mv.type==="in") inn += amt;
-    else if(mv.type==="out") out += amt;
-  }
-  return {inn,out,net:inn-out};
-}
     const [yy, mm] = key.split("-").map(Number);
     const from = new Date(yy, mm-1, 1, 0,0,0,0);
     const to = new Date(yy, mm, 0, 23,59,59,999);
+
     let inn=0, out=0;
     for(const mv of state.movements){
       const t = new Date(mv.ts);
       if(isNaN(t) || t<from || t>to) continue;
       const amt = Number(mv.amount)||0;
+
       if(mv.type==="in") inn += amt;
-      else if(mv.type==="out") out += amt;
+      else if(mv.type==="out"){
+        // 🚫 Ignorar compras con tarjeta (no es salida real)
+        if(mv.meta?.kind === "card_purchase") continue;
+        // ✅ Contar pagos reales (cuotas + gastos normales)
+        out += amt;
+      }
     }
     return {inn,out,net:inn-out};
   }
@@ -716,7 +663,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
   function movementKindLabel(mv){
     const k = mv?.meta?.kind;
     if(k==="card_purchase") return "Compra tarjeta";
-    if(k==="card_payment") return "Pago tarjeta";
+    if(k==="card_payment") return "Pago cuota";
     return "";
   }
 
@@ -790,7 +737,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
   const newPay = $$("#newPay");
   const payList = $$("#payList");
 
-  // Hoja fullscreen
+  // Fullscreen sheet
   const modalWrap = $$("#modalWrap");
   const modalTitle = $$("#modalTitle");
   const modalBody = $$("#modalBody");
@@ -1014,7 +961,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
       return `
         <tr class="tr">
           <td style="width:110px" class="muted mono">${humanDate(t)}</td>
-          <td style="width:170px">${badge} ${kindBadge}</td>
+          <td style="width:190px">${badge} ${kindBadge}</td>
           <td style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(cat)}</td>
           <td style="width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" class="muted">${escapeHtml(method)}</td>
           <td style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" class="muted">${escapeHtml(note)}</td>
@@ -1098,7 +1045,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
       const delBtn = isCard ? `` : `<button class="btn small bad" data-delpay="${idx}">Borrar</button>`;
       return `
         <div class="listItem">
-          <div style="min-width:0">
+          <div style="min-width:0;flex:1">
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
               ${badge}
               <b>${escapeHtml(m.name)}</b>
@@ -1138,7 +1085,8 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
       });
     });
   }
-    function renderAll(){
+
+  function renderAll(){
     save();
 
     disponibleTop.textContent = money(totalDisponible());
@@ -1164,8 +1112,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
     renderMasterCats();
     renderMasterPays();
   }
-
-  // Maestro actions
+    // Maestro actions
   $$("#btnAddCat").addEventListener("click", ()=>{
     const name = (newCat.value||"").trim();
     if(!name) return alert("Poné un nombre de categoría.");
@@ -1382,10 +1329,10 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
         meta: {}
       };
 
-      // Si es salida con tarjeta => crear deuda + cuotas
+      // Si es salida con tarjeta => crear deuda + cuotas + movimiento “informativo”
       if(!isIn && isCardMethod(method)){
         const desc = ($$("#c_desc").value||"").trim() || "Compra tarjeta";
-        const cuotas = Math.max(1, Number(parseMoney($$("#c_cuotas").value) || $$("#c_cuotas").value) || 1);
+        const cuotas = Math.max(1, Number($$("#c_cuotas").value) || 1);
         const firstDue = $$("#c_firstDue").value ? parseDateInput($$("#c_firstDue").value) : when;
         const bank = ($$("#c_bank").value||"").trim();
 
@@ -1400,7 +1347,8 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
           paidCount: 0
         };
         state.cardDebts.push(debt);
-        mv.meta.kind = "card_purchase";
+
+        mv.meta.kind = "card_purchase"; // 🔥 esto NO cuenta en salidas del mes
         mv.meta.debtId = debt.id;
       }
 
@@ -1410,7 +1358,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
     });
   }
 
-  // Pagar una cuota: impacta en "Disponible" (sale de método real) y baja deuda
+  // Pagar una cuota: impacta en Disponible y baja deuda
   function openPayInstallmentSheet(debtId, idx){
     const debt = state.cardDebts.find(d=>d.id===debtId);
     if(!debt) return alert("No se encontró esa deuda.");
@@ -1419,7 +1367,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
     if(!inst) return alert("No se encontró esa cuota.");
 
     const methods = getRealMethods();
-    if(methods.length===0) return alert("Agregá un método real (Efectivo/MP/Banco) en Hoja Maestro.");
+    if(methods.length===0) return alert("Agregá un método real en Hoja Maestro.");
 
     openSheet("Pagar cuota", `
       <div class="kpi">
@@ -1444,7 +1392,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
           <select id="p_method">
             ${methods.map(m=>`<option value="${escapeAttr(m.name)}">${escapeHtml(m.name)}</option>`).join("")}
           </select>
-          <div class="tiny muted">Esto baja tu disponible y marca la cuota como pagada.</div>
+          <div class="tiny muted">Esto baja tu disponible y la deuda de tarjeta.</div>
         </div>
       </div>
 
@@ -1468,7 +1416,7 @@ h1{margin:0;font-size:15px;letter-spacing:.2px}
       const when = parseDateInput(dateV);
       const method = $$("#p_method").value;
 
-      // Registrar salida real (pago) y bajar deuda
+      // Registrar salida REAL (esto sí cuenta en salidas del mes)
       state.movements.push({
         id: uid(),
         type: "out",
