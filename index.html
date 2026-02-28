@@ -268,17 +268,19 @@
 
   /* Disable horizontal scroll globally */
   .wrap, .card, .listItem, .modalInner {overflow-x:hidden}
-  /* PRESIÓN FUERTE DE BOTONES */
+/* PRESIÓN FUERTE DE BOTONES */
 button,
 .btn,
 .tab {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
   transition: transform .08s ease, filter .08s ease, box-shadow .08s ease;
 }
 
 button:active,
 .btn:active,
 .tab:active {
-  transform: translateY(4px) scale(.95) !important;
+  transform: translateY(6px) scale(.92) !important;
   filter: brightness(1.2) !important;
   box-shadow: 0 4px 10px rgba(0,0,0,.9) !important;
 }
