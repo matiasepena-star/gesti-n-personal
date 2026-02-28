@@ -313,7 +313,7 @@
           <div class="kpi">
             <div class="label">Salidas del mes (solo reales)</div>
             <div class="value mono" id="kpiOutMes">$ 0</div>
-            <div class="tiny">No cuenta “Compra tarjeta”. Solo cuotas/pagos reales.</div>
+            <div class="tiny">No cuenta “💳 Compra tarjeta”. Solo cuotas/pagos reales.</div>
           </div>
           <div class="kpi">
             <div class="label">Neto del mes</div>
@@ -482,27 +482,6 @@
   const $$ = (sel, root=document)=> root.querySelector(sel);
   const $$$ = (sel, root=document)=> Array.from(root.querySelectorAll(sel));
 
-  // Small click haptic-ish (sound)
-  const ctx = (window.AudioContext || window.webkitAudioContext) ? new (window.AudioContext || window.webkitAudioContext)() : null;
-  function clickSound(){
-    if(!ctx) return;
-    try{
-      const o = ctx.createOscillator();
-      const g = ctx.createGain();
-      o.type = "sine";
-      o.frequency.value = 180;
-      g.gain.value = 0.03;
-      o.connect(g); g.connect(ctx.destination);
-      o.start();
-      o.stop(ctx.currentTime + 0.03);
-    }catch(e){}
-  }
-  function bindPressFeedback(){
-    $$$("button.btn, .tab").forEach(el=>{
-      el.addEventListener("click", ()=>clickSound());
-    });
-  }
-
   function uid(){ return Math.random().toString(16).slice(2) + Date.now().toString(16); }
   function escapeHtml(s){ return String(s||"").replace(/[&<>"]/g, c=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c])); }
   function escapeAttr(s){ return escapeHtml(s).replace(/"/g,"&quot;"); }
@@ -579,14 +558,12 @@
       const raw = localStorage.getItem(KEY);
       if(!raw) return defaultState();
       const s = JSON.parse(raw);
-      // harden
       if(!s.master) s.master = defaultState().master;
       if(!Array.isArray(s.master.payMethods)) s.master.payMethods = defaultState().master.payMethods;
       if(!Array.isArray(s.master.categories)) s.master.categories = [];
       if(!Array.isArray(s.movements)) s.movements = [];
       if(!Array.isArray(s.cardDebts)) s.cardDebts = [];
       if(!Array.isArray(s.suggestions)) s.suggestions = [];
-      // ensure tarjeta exists
       if(!s.master.payMethods.some(m=>String(m.name).toLowerCase()==="tarjeta")){
         s.master.payMethods.push({name:"Tarjeta", opening:0});
       }
@@ -637,7 +614,7 @@
     return sum;
   }
 
-  // ✅ CLAVE: la compra con tarjeta NO cuenta como salida del mes
+  // ✅ Compra tarjeta NO cuenta como salida del mes
   function monthTotals(key){
     const [yy, mm] = key.split("-").map(Number);
     const from = new Date(yy, mm-1, 1, 0,0,0,0);
@@ -651,19 +628,18 @@
 
       if(mv.type==="in") inn += amt;
       else if(mv.type==="out"){
-        // 🚫 Ignorar compras con tarjeta (no es salida real)
-        if(mv.meta?.kind === "card_purchase") continue;
-        // ✅ Contar pagos reales (cuotas + gastos normales)
-        out += amt;
+        if(mv.meta?.kind === "card_purchase") continue; // 🚫 no es salida real
+        out += amt; // ✅ cuotas/pagos reales
       }
     }
     return {inn,out,net:inn-out};
   }
 
-  function movementKindLabel(mv){
+  // ✅ badges claros
+  function movementKindBadge(mv){
     const k = mv?.meta?.kind;
-    if(k==="card_purchase") return "Compra tarjeta";
-    if(k==="card_payment") return "Pago cuota";
+    if(k==="card_purchase") return `<span class="badge card">💳 Compra tarjeta</span>`;
+    if(k==="card_payment") return `<span class="badge card">✅ Pago cuota</span>`;
     return "";
   }
 
@@ -858,8 +834,7 @@
     lastMovsEl.innerHTML = items.map(mv=>{
       const t = new Date(mv.ts);
       const badge = mv.type==="in" ? `<span class="badge in">Entrada</span>` : `<span class="badge out">Salida</span>`;
-      const kind = movementKindLabel(mv);
-      const kindBadge = kind ? `<span class="badge">${escapeHtml(kind)}</span>` : "";
+      const kindBadge = movementKindBadge(mv);
       const cls = mv.type==="in" ? "good" : "bad";
       const sign = mv.type==="in" ? "+" : "-";
       const cat = [mv.category, mv.subcategory].filter(Boolean).join(" · ") || "—";
@@ -950,8 +925,7 @@
     const rows = items.map(mv=>{
       const t = new Date(mv.ts);
       const badge = mv.type==="in" ? `<span class="badge in">Entrada</span>` : `<span class="badge out">Salida</span>`;
-      const kind = movementKindLabel(mv);
-      const kindBadge = kind ? `<span class="badge">${escapeHtml(kind)}</span>` : "";
+      const kindBadge = movementKindBadge(mv);
       const sign = mv.type==="in" ? "+" : "-";
       const cls = mv.type==="in" ? "good" : "bad";
       const cat = [mv.category, mv.subcategory].filter(Boolean).join(" · ") || "—";
@@ -961,7 +935,7 @@
       return `
         <tr class="tr">
           <td style="width:110px" class="muted mono">${humanDate(t)}</td>
-          <td style="width:190px">${badge} ${kindBadge}</td>
+          <td style="width:230px">${badge} ${kindBadge}</td>
           <td style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(cat)}</td>
           <td style="width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" class="muted">${escapeHtml(method)}</td>
           <td style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" class="muted">${escapeHtml(note)}</td>
@@ -1348,7 +1322,7 @@
         };
         state.cardDebts.push(debt);
 
-        mv.meta.kind = "card_purchase"; // 🔥 esto NO cuenta en salidas del mes
+        mv.meta.kind = "card_purchase"; // 🔥 no cuenta en salidas del mes
         mv.meta.debtId = debt.id;
       }
 
@@ -1416,7 +1390,7 @@
       const when = parseDateInput(dateV);
       const method = $$("#p_method").value;
 
-      // Registrar salida REAL (esto sí cuenta en salidas del mes)
+      // Registrar salida REAL (sí cuenta en salidas del mes)
       state.movements.push({
         id: uid(),
         type: "out",
@@ -1429,7 +1403,7 @@
         meta: { kind: "card_payment", debtId: debt.id, cuota: idx }
       });
 
-      // marcar cuota como pagada (avanza contador)
+      // marcar cuota como pagada
       const paid = Math.max(0, Number(debt.paidCount)||0);
       debt.paidCount = Math.max(paid, idx);
 
@@ -1439,7 +1413,6 @@
   }
 
   // Init
-  bindPressFeedback();
   renderAll();
 
 })();
