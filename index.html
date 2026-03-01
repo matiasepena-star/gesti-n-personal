@@ -268,30 +268,33 @@
 
   /* Disable horizontal scroll globally */
   .wrap, .card, .listItem, .modalInner {overflow-x:hidden}
-/* PRESIÓN FUERTE DE BOTONES */
-button,
-.btn,
-.tab {
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: transform .08s ease, filter .08s ease, box-shadow .08s ease;
-}
 
-button:active,
-.btn:active,
-.tab:active {
-  transform: translateY(6px) scale(.92) !important;
-  filter: brightness(1.2) !important;
-  box-shadow: 0 4px 10px rgba(0,0,0,.9) !important;
-}
-button:active,
-.btn:active,
-.tab:active,
-button:focus,
-.btn:focus,
-.tab:focus {
-transform: translateY(8px) scale(.88) !important;
-}
+  /* (dejé tus reglas de presión tal cual ya las tenías) */
+  /* PRESIÓN FUERTE DE BOTONES */
+  button,
+  .btn,
+  .tab {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .08s ease, filter .08s ease, box-shadow .08s ease;
+  }
+
+  button:active,
+  .btn:active,
+  .tab:active {
+    transform: translateY(6px) scale(.92) !important;
+    filter: brightness(1.2) !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,.9) !important;
+  }
+
+  button:active,
+  .btn:active,
+  .tab:active,
+  button:focus,
+  .btn:focus,
+  .tab:focus {
+    transform: translateY(8px) scale(.88) !important;
+  }
 </style>
 </head>
 
@@ -305,10 +308,15 @@ transform: translateY(8px) scale(.88) !important;
       </div>
     </div>
 
+    <!-- ✅ Disponible separado ARS / USD -->
     <div class="pillRow">
       <div class="pill">
-        <div class="label">Disponible</div>
-        <div class="value mono" id="disponibleTop">$ 0</div>
+        <div class="label">Disponible ARS</div>
+        <div class="value mono" id="disponibleTopARS">$ 0</div>
+      </div>
+      <div class="pill">
+        <div class="label">Disponible USD</div>
+        <div class="value mono" id="disponibleTopUSD">US$ 0</div>
       </div>
     </div>
 
@@ -447,7 +455,7 @@ transform: translateY(8px) scale(.88) !important;
         <div class="formGrid">
           <div class="field">
             <label>Nuevo método</label>
-            <input class="input" id="newPay" placeholder="Ej: Mercado Pago"/>
+            <input class="input" id="newPay" placeholder="Ej: Mercado Pago / Efectivo USD"/>
           </div>
           <div class="field" style="display:flex;align-items:end">
             <button class="btn primary" id="btnAddPay" style="width:100%">Agregar</button>
@@ -510,19 +518,37 @@ transform: translateY(8px) scale(.88) !important;
   function escapeHtml(s){ return String(s||"").replace(/[&<>"]/g, c=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c])); }
   function escapeAttr(s){ return escapeHtml(s).replace(/"/g,"&quot;"); }
 
-  function money(n){
+  // ✅ Moneda por método: si el nombre incluye "USD" => USD
+  function methodCur(methodName){
+    const n = String(methodName||"").toLowerCase();
+    return n.includes("usd") ? "USD" : "ARS";
+  }
+
+  // ✅ Formateo por moneda
+  function moneyCur(n, cur="ARS"){
     const v = Math.round(Number(n)||0);
     const sign = v<0 ? "-" : "";
     const abs = Math.abs(v);
-    return sign + "$ " + abs.toString().replace(/\B(?=(\d{3})+(?!\d))/g,".");
+    const base = abs.toString().replace(/\B(?=(\d{3})+(?!\d))/g,".");
+    return cur==="USD" ? `${sign}US$ ${base}` : `${sign}$ ${base}`;
   }
+
+  // (se mantiene tu money() para compatibilidad interna donde lo usabas)
+  function money(n){
+    return moneyCur(n, "ARS");
+  }
+
   function parseMoney(str){
     const s = String(str||"").replace(/[^\d-]/g,"");
     return Number(s||0);
   }
-  function fmtMoneyLive(input){
+
+  function fmtMoneyLiveCur(input, cur="ARS"){
     const v = parseMoney(input.value);
-    input.value = v ? money(v) : "";
+    input.value = v ? moneyCur(v, cur) : "";
+  }
+  function fmtMoneyLive(input){
+    fmtMoneyLiveCur(input, "ARS");
   }
 
   function toDateInputValue(d){
@@ -596,10 +622,10 @@ transform: translateY(8px) scale(.88) !important;
   }
   let state = load();
   function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
-    // Business logic
-  function isCardMethod(methodName){ return String(methodName||"").toLowerCase()==="tarjeta"; }
 
-  function methodBalance(methodName){
+  // Business logic
+  function isCardMethod(methodName){ return String(methodName||"").toLowerCase()==="tarjeta"; }
+    function methodBalance(methodName){
     const m = state.master.payMethods.find(x=>x.name===methodName);
     const opening = m ? Number(m.opening)||0 : 0;
     if(isCardMethod(methodName)) return opening;
@@ -621,8 +647,11 @@ transform: translateY(8px) scale(.88) !important;
   function getRealMethods(){ return state.master.payMethods.filter(m=>!isCardMethod(m.name)); }
   function getAllMethods(){ return state.master.payMethods.slice(); }
 
-  function totalDisponible(){
-    return getRealMethods().reduce((acc,m)=> acc + methodBalance(m.name), 0);
+  // ✅ Disponible separado por moneda (NO se mezcla)
+  function totalDisponibleCur(cur){
+    return getRealMethods()
+      .filter(m => methodCur(m.name) === cur)
+      .reduce((acc,m)=> acc + methodBalance(m.name), 0);
   }
 
   function cardDebtTotal(){
@@ -639,6 +668,7 @@ transform: translateY(8px) scale(.88) !important;
   }
 
   // ✅ Compra tarjeta NO cuenta como salida del mes
+  // ✅ KPIs del mes quedan en ARS (no se mezclan con USD)
   function monthTotals(key){
     const [yy, mm] = key.split("-").map(Number);
     const from = new Date(yy, mm-1, 1, 0,0,0,0);
@@ -648,6 +678,10 @@ transform: translateY(8px) scale(.88) !important;
     for(const mv of state.movements){
       const t = new Date(mv.ts);
       if(isNaN(t) || t<from || t>to) continue;
+
+      // 🔒 KPIs del mes solo ARS
+      if(methodCur(mv.method) !== "ARS") continue;
+
       const amt = Number(mv.amount)||0;
 
       if(mv.type==="in") inn += amt;
@@ -659,7 +693,6 @@ transform: translateY(8px) scale(.88) !important;
     return {inn,out,net:inn-out};
   }
 
-  // ✅ badges claros
   function movementKindBadge(mv){
     const k = mv?.meta?.kind;
     if(k==="card_purchase") return `<span class="badge card">💳 Compra tarjeta</span>`;
@@ -714,7 +747,8 @@ transform: translateY(8px) scale(.88) !important;
   }
 
   // UI refs
-  const disponibleTop = $$("#disponibleTop");
+  const disponibleTopARS = $$("#disponibleTopARS");
+  const disponibleTopUSD = $$("#disponibleTopUSD");
   const kpiInMes = $$("#kpiInMes");
   const kpiOutMes = $$("#kpiOutMes");
   const kpiNetoMes = $$("#kpiNetoMes");
@@ -798,13 +832,14 @@ transform: translateY(8px) scale(.88) !important;
     byMethod.innerHTML = real.map(m=>{
       const bal = methodBalance(m.name);
       const cls = bal>=0 ? "good" : "bad";
+      const cur = methodCur(m.name);
       return `
         <div class="listItem">
           <div>
             <div style="font-weight:950">${escapeHtml(m.name)}</div>
-            <div class="tiny">Saldo inicial: <span class="mono">${money(m.opening||0)}</span></div>
+            <div class="tiny">Saldo inicial: <span class="mono">${moneyCur(m.opening||0, cur)}</span></div>
           </div>
-          <div class="mono value ${cls}" style="font-size:16px">${money(bal)}</div>
+          <div class="mono value ${cls}" style="font-size:16px">${moneyCur(bal, cur)}</div>
         </div>
       `;
     }).join("");
@@ -831,10 +866,10 @@ transform: translateY(8px) scale(.88) !important;
             <div style="margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
               <b>${escapeHtml(it.desc || "Tarjeta")}</b>
             </div>
-            <div class="tiny">Monto: <span class="mono">${money(it.amount)}</span></div>
+            <div class="tiny">Monto: <span class="mono">${moneyCur(it.amount,"ARS")}</span></div>
           </div>
           <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
-            <div class="mono" style="font-weight:950">${money(it.amount)}</div>
+            <div class="mono" style="font-weight:950">${moneyCur(it.amount,"ARS")}</div>
             <button class="btn small good" data-payinst="${it.debtId}|${it.idx}">Marcar pagado</button>
           </div>
         </div>
@@ -848,8 +883,7 @@ transform: translateY(8px) scale(.88) !important;
       });
     });
   }
-
-  function renderLastMovs(){
+    function renderLastMovs(){
     const items = lastMovements(10);
     if(items.length===0){
       lastMovsEl.innerHTML = `<div class="empty">Todavía no cargaste movimientos.</div>`;
@@ -863,6 +897,7 @@ transform: translateY(8px) scale(.88) !important;
       const sign = mv.type==="in" ? "+" : "-";
       const cat = [mv.category, mv.subcategory].filter(Boolean).join(" · ") || "—";
       const note = (mv.note||"").trim();
+      const cur = methodCur(mv.method);
       return `
         <div class="listItem">
           <div style="min-width:0">
@@ -876,7 +911,7 @@ transform: translateY(8px) scale(.88) !important;
               ${note ? ` · <span class="muted">${escapeHtml(note)}</span>` : ""}
             </div>
           </div>
-          <div class="mono value ${cls}" style="font-size:16px;white-space:nowrap">${sign} ${money(mv.amount)}</div>
+          <div class="mono value ${cls}" style="font-size:16px;white-space:nowrap">${sign} ${moneyCur(mv.amount, cur)}</div>
         </div>
       `;
     }).join("");
@@ -955,6 +990,7 @@ transform: translateY(8px) scale(.88) !important;
       const cat = [mv.category, mv.subcategory].filter(Boolean).join(" · ") || "—";
       const note = (mv.note||"").trim() || "—";
       const method = mv.method || "—";
+      const cur = methodCur(method);
 
       return `
         <tr class="tr">
@@ -963,7 +999,7 @@ transform: translateY(8px) scale(.88) !important;
           <td style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(cat)}</td>
           <td style="width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" class="muted">${escapeHtml(method)}</td>
           <td style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" class="muted">${escapeHtml(note)}</td>
-          <td class="right mono"><b class="${cls}">${sign} ${money(mv.amount)}</b></td>
+          <td class="right mono"><b class="${cls}">${sign} ${moneyCur(mv.amount, cur)}</b></td>
           <td class="right" style="width:86px">
             <button class="btn small ghost" data-delmov="${mv.id}">Borrar</button>
           </td>
@@ -1041,26 +1077,31 @@ transform: translateY(8px) scale(.88) !important;
       const isCard = isCardMethod(m.name);
       const badge = isCard ? `<span class="badge card">Tarjeta (deuda)</span>` : `<span class="badge">Método</span>`;
       const delBtn = isCard ? `` : `<button class="btn small bad" data-delpay="${idx}">Borrar</button>`;
+      const cur = methodCur(m.name);
       return `
         <div class="listItem">
           <div style="min-width:0;flex:1">
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
               ${badge}
               <b>${escapeHtml(m.name)}</b>
+              ${!isCard && cur==="USD" ? `<span class="badge">USD</span>` : ``}
             </div>
             <div class="tiny">Saldo inicial</div>
-            <input class="input mono" data-open="${escapeAttr(m.name)}" type="tel" inputmode="numeric" placeholder="$ 0" value="${m.opening ? money(m.opening) : ""}"/>
+            <input class="input mono" data-open="${escapeAttr(m.name)}" type="tel" inputmode="numeric" placeholder="${cur==="USD" ? "US$ 0" : "$ 0"}" value="${m.opening ? moneyCur(m.opening, cur) : ""}"/>
           </div>
           <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-end">
             ${delBtn}
-            ${isCard ? `<div class="tiny muted">No se borra 😄</div>` : `<div class="tiny muted">${money(methodBalance(m.name))}</div>`}
+            ${isCard ? `<div class="tiny muted">No se borra 😄</div>` : `<div class="tiny muted">${moneyCur(methodBalance(m.name), cur)}</div>`}
           </div>
         </div>
       `;
     }).join("");
 
     payList.querySelectorAll("[data-open]").forEach(inp=>{
-      inp.addEventListener("input", ()=>fmtMoneyLive(inp));
+      inp.addEventListener("input", ()=>{
+        const name = inp.getAttribute("data-open");
+        fmtMoneyLiveCur(inp, methodCur(name));
+      });
       inp.addEventListener("blur", ()=>{
         const name = inp.getAttribute("data-open");
         const val = parseMoney(inp.value);
@@ -1087,17 +1128,19 @@ transform: translateY(8px) scale(.88) !important;
   function renderAll(){
     save();
 
-    disponibleTop.textContent = money(totalDisponible());
+    // ✅ Disponible separado (no mezcla)
+    disponibleTopARS.textContent = moneyCur(totalDisponibleCur("ARS"), "ARS");
+    disponibleTopUSD.textContent = moneyCur(totalDisponibleCur("USD"), "USD");
 
     const mt = monthTotals(monthKey(new Date()));
-    kpiInMes.textContent = money(mt.inn);
-    kpiOutMes.textContent = money(mt.out);
-    kpiNetoMes.textContent = money(mt.net);
+    kpiInMes.textContent = moneyCur(mt.inn, "ARS");
+    kpiOutMes.textContent = moneyCur(mt.out, "ARS");
+    kpiNetoMes.textContent = moneyCur(mt.net, "ARS");
     kpiNetoMes.classList.remove("good","bad");
     kpiNetoMes.classList.add(mt.net>=0 ? "good" : "bad");
 
     const cd = cardDebtTotal();
-    kpiCardDebt.textContent = money(cd);
+    kpiCardDebt.textContent = moneyCur(cd, "ARS");
     kpiCardDebt.classList.remove("good","bad");
     kpiCardDebt.classList.add(cd>0 ? "bad" : "good");
 
@@ -1110,7 +1153,8 @@ transform: translateY(8px) scale(.88) !important;
     renderMasterCats();
     renderMasterPays();
   }
-    // Maestro actions
+
+  // Maestro actions
   $$("#btnAddCat").addEventListener("click", ()=>{
     const name = (newCat.value||"").trim();
     if(!name) return alert("Poné un nombre de categoría.");
@@ -1210,7 +1254,7 @@ transform: translateY(8px) scale(.88) !important;
       <div class="formGrid">
         <div class="field">
           <label>Monto</label>
-          <input class="input mono" id="m_amount" type="tel" inputmode="numeric" placeholder="$ 20.000"/>
+          <input class="input mono" id="m_amount" type="tel" inputmode="numeric" placeholder="$ 20.000 / US$ 20"/>
         </div>
         <div class="field">
           <label>Fecha</label>
@@ -1226,6 +1270,7 @@ transform: translateY(8px) scale(.88) !important;
             ? `<div class="tiny muted">Entrada no usa Tarjeta.</div>`
             : `<div class="tiny muted">Si elegís <b>Tarjeta</b>: se crea deuda + cuotas.</div>`
           }
+          <div class="tiny muted">Tip: si el método dice <b>USD</b>, se guarda en dólares.</div>
         </div>
 
         <div class="field">
@@ -1280,9 +1325,16 @@ transform: translateY(8px) scale(.88) !important;
       </div>
     `);
 
-    // Behaviors
     const amount = $$("#m_amount");
-    amount.addEventListener("input", ()=>fmtMoneyLive(amount));
+    const methodSel = $$("#m_method");
+
+    function currentCur(){
+      return methodCur(methodSel.value);
+    }
+
+    // formateo en vivo según ARS/USD
+    amount.addEventListener("input", ()=>fmtMoneyLiveCur(amount, currentCur()));
+    methodSel.addEventListener("change", ()=>fmtMoneyLiveCur(amount, currentCur()));
 
     const catSel = $$("#m_cat");
     const subSel = $$("#m_sub");
@@ -1294,7 +1346,6 @@ transform: translateY(8px) scale(.88) !important;
     catSel.addEventListener("change", fillSubs);
     fillSubs();
 
-    const methodSel = $$("#m_method");
     const cardExtras = $$("#cardExtras");
     function toggleCard(){
       const isCard = isCardMethod(methodSel.value);
@@ -1356,7 +1407,7 @@ transform: translateY(8px) scale(.88) !important;
     });
   }
 
-  // Pagar una cuota: impacta en Disponible y baja deuda
+  // Pagar una cuota: impacta en Disponible y baja deuda (ARS)
   function openPayInstallmentSheet(debtId, idx){
     const debt = state.cardDebts.find(d=>d.id===debtId);
     if(!debt) return alert("No se encontró esa deuda.");
@@ -1379,7 +1430,7 @@ transform: translateY(8px) scale(.88) !important;
       <div class="formGrid">
         <div class="field">
           <label>Monto cuota</label>
-          <input class="input mono" id="p_amt" type="tel" inputmode="numeric" value="${money(inst.amount)}"/>
+          <input class="input mono" id="p_amt" type="tel" inputmode="numeric" value="${moneyCur(inst.amount,"ARS")}"/>
         </div>
         <div class="field">
           <label>Fecha de pago</label>
@@ -1402,7 +1453,7 @@ transform: translateY(8px) scale(.88) !important;
     `);
 
     const pAmt = $$("#p_amt");
-    pAmt.addEventListener("input", ()=>fmtMoneyLive(pAmt));
+    pAmt.addEventListener("input", ()=>fmtMoneyLiveCur(pAmt, "ARS"));
 
     $$("#btnPayCancel").addEventListener("click", closeSheet);
 
@@ -1414,7 +1465,6 @@ transform: translateY(8px) scale(.88) !important;
       const when = parseDateInput(dateV);
       const method = $$("#p_method").value;
 
-      // Registrar salida REAL (sí cuenta en salidas del mes)
       state.movements.push({
         id: uid(),
         type: "out",
@@ -1427,7 +1477,6 @@ transform: translateY(8px) scale(.88) !important;
         meta: { kind: "card_payment", debtId: debt.id, cuota: idx }
       });
 
-      // marcar cuota como pagada
       const paid = Math.max(0, Number(debt.paidCount)||0);
       debt.paidCount = Math.max(paid, idx);
 
